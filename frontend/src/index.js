@@ -8,6 +8,8 @@ import Store from "./redux/store";
 const root = createRoot(document.getElementById("root"));
 
 root.render(
+
+  // comment a line to see the change
   <Provider store={Store}>
     <App />
   </Provider>
