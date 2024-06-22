@@ -1,19 +1,59 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles/styles";
 import { RxCross1 } from "react-icons/rx";
-
+import {
+  CardNumberElement,
+  CardCvcElement,
+  CardExpiryElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const Payment = () => {
+  const { user } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const stripe = useStripe();
+  const elements = useElements();
+  const [open, setOpen] = useState(false);
+
   const [orderData, setOrderData] = useState([]);
   console.log("🚀 ~ Payment ~ orderData:", orderData);
   useEffect(() => {
     const orderData = JSON.parse(localStorage.getItem("latestOrder"));
     setOrderData(orderData);
   }, []);
+  const createOrder = (data, actions) => {
+    //
+  };
+  const onApprove = async (data, actions) => {
+    console.log("onaaprove");
+  };
+  const paypalPayementHandler = async (payementInfo) => {
+    console.log("paypalpayemnt handler");
+  };
+  const paymentData = {
+    amount: Math.round(orderData?.totalPrice * 100),
+  };
+  const paymentHandler = async (e) => {
+    e.preventDefault();
+  };
+  const cashOnDeliveryHandler=()=>{
+    console.log("object")
+  }
   return (
     <div className="w-full flex flex-col items-center py-8">
       <div className="w-[90%] 1000px:w-[70%] block 800px:flex">
         <div className=" w-full 800px:w-[65%] ">
-          <PaymentInfo />
+          <PaymentInfo
+            user={user}
+            open={open}
+            setOpen={setOpen}
+            onApprove={onApprove}
+            createOrder={createOrder}
+            paymentHandler={paymentHandler}
+            cashOnDeliveryHandler={cashOnDeliveryHandler}
+          />
         </div>
         <div className=" w-full 800px:w-[35%] 800px:mt-0 mt-8">
           <CartData orderData={orderData} />
@@ -23,8 +63,21 @@ const Payment = () => {
   );
 };
 
-const PaymentInfo = () => {
+const PaymentInfo = ({
+  user,
+  open,
+  setOpen,
+  onApprove,
+  createOrder,
+  paymentHandler,
+  cashOnDeliveryHandler,
+}) => {
+  console.log("🚀 ~ cashOnDeliveryHandler:", cashOnDeliveryHandler);
+  console.log("🚀 ~ paymentHandler:", paymentHandler);
+  console.log("🚀 ~ createOrder:", createOrder);
+  console.log("🚀 ~ user:", user);
   const [select, setSelect] = useState(1);
+
   return (
     <div className="w-full 800px:w-[95%] bg-[#fff] rounded-md p-5 pb-8">
       {/* select buttons */}
@@ -52,14 +105,14 @@ const PaymentInfo = () => {
                   <label className="block pb-2">Name On Card</label>
                   <input
                     required
-                    // placeholder={user && user.name}
+                    placeholder={user && user.name}
                     className={`${styles.input} !w-[95%] text-[#444]`}
                     // value={user && user.name}
                   />
                 </div>
                 <div className="w-[50%]">
                   <label className="block pb-2">Exp Date</label>
-                  {/* <CardExpiryElement
+                  <CardExpiryElement
                   className={`${styles.input}`}
                   options={{
                     style: {
@@ -77,14 +130,14 @@ const PaymentInfo = () => {
                       },
                     },
                   }}
-                /> */}
+                />
                 </div>
               </div>
 
               <div className="w-full flex pb-3">
                 <div className="w-[50%]">
                   <label className="block pb-2">Card Number</label>
-                  {/* <CardNumberElement
+                  <CardNumberElement
                   className={`${styles.input} !h-[35px] !w-[95%]`}
                   options={{
                     style: {
@@ -102,11 +155,11 @@ const PaymentInfo = () => {
                       },
                     },
                   }}
-                /> */}
+                />
                 </div>
                 <div className="w-[50%]">
                   <label className="block pb-2">CVV</label>
-                  {/* <CardCvcElement
+                  <CardCvcElement
                   className={`${styles.input} !h-[35px]`}
                   options={{
                     style: {
@@ -124,7 +177,7 @@ const PaymentInfo = () => {
                       },
                     },
                   }}
-                /> */}
+                />
                 </div>
               </div>
               <input

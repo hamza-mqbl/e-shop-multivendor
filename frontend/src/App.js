@@ -47,11 +47,15 @@ import Loader from "./components/layout/Loader.jsx";
 import Checkout from "./components/Checkout/Checkout.jsx";
 import { getAllProducts } from "./redux/actions/product.js";
 import { getAllEvent, getAlleventsShop } from "./redux/actions/event.js";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
 function App() {
-  const [stipeApiKey, setStripeApiKey] = useState("");
+  const [stripeApiKey, setStripeApiKey] = useState("");
   async function getStripeApiKey() {
     const { data } = await axios.get(`${server}/payement/stripeapikey`);
-    setStripeApiKey(data.getStripeApiKey);
+    setStripeApiKey(data.stripeApiKey);
+    // console.log("🚀 ~ getStripeApiKey ~ data:", data)
   }
   const { loading } = useSelector((state) => state.user);
 
@@ -65,6 +69,7 @@ function App() {
     getStripeApiKey();
   }, []);
   // console.log(isSeller, seller);
+  // console.log("🚀 ~ App ~ stipeApiKey:", stipeApiKey);
 
   return (
     <>
@@ -72,6 +77,20 @@ function App() {
         <Loader />
       ) : (
         <BrowserRouter>
+          {stripeApiKey && (
+            <Elements stripe={loadStripe(stripeApiKey)}>
+              <Routes>
+                <Route
+                  path="/payment"
+                  element={
+                    <ProtectedRoute>
+                      <PaymentPage />
+                    </ProtectedRoute>
+                  }
+                />
+              </Routes>
+            </Elements>
+          )}
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
@@ -80,14 +99,7 @@ function App() {
               path="/activation/:activation_token"
               element={<ActivationPage />}
             />
-            <Route
-              path="/payment"
-              element={
-                <ProtectedRoute>
-                  <PaymentPage />
-                </ProtectedRoute>
-              }
-            />
+
             <Route
               path="/seller/activation/:activation_token"
               element={<SellerActivationPage />}
