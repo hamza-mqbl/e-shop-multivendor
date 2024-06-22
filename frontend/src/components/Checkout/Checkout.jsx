@@ -61,6 +61,7 @@ const Checkout = () => {
     0
   );
   const shipping = subTotalPrice * 0.1;
+  // handle submit for apply coupon code
   const handleSubmit = async (e) => {
     e.preventDefault();
     const name = couponCode;

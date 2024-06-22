@@ -10,19 +10,35 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromWishList } from "../../redux/actions/wishlist";
 import { addToCart } from "../../redux/actions/cart";
+import { toast } from "react-toastify";
 
 const WishList = ({ setOpenWishList }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
+  const { cart } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
   const removeFromWishlistHandler = (data) => {
     dispatch(removeFromWishList(data));
   };
 
+  // const addToCartHandler = (data) => {
+  //   const newData = { ...data, qty: 1 };
+  //   dispatch(addToCart(newData));
+  //   setOpenWishList(false);
+  // };
   const addToCartHandler = (data) => {
-    const newData = { ...data, qty: 1 };
-    dispatch(addToCart(newData));
-    setOpenWishList(false);
+    const isItemExists = cart && cart.find((i) => i._id == data._id);
+    if (isItemExists) {
+      toast.error("Item already in cart!");
+    } else {
+      if (data.stock < 1) {
+        toast.error("Product stock limited!");
+      } else {
+        const cartData = { ...data, qty: 1 };
+        dispatch(addToCart(cartData));
+        toast.success("Item added to cart successfully!");
+      }
+    }
   };
   return (
     <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
