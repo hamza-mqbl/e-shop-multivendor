@@ -53,7 +53,7 @@ import { loadStripe } from "@stripe/stripe-js";
 function App() {
   const [stripeApiKey, setStripeApiKey] = useState("");
   async function getStripeApiKey() {
-    const { data } = await axios.get(`${server}/payement/stripeapikey`);
+    const { data } = await axios.get(`${server}/payment/stripeapikey`);
     setStripeApiKey(data.stripeApiKey);
     // console.log("🚀 ~ getStripeApiKey ~ data:", data)
   }

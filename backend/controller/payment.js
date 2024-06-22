@@ -3,9 +3,12 @@ const router = express.Router();
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 router.post(
-  "/payment/process",
+  "/process",
   catchAsyncErrors(async (req, res, next) => {
-    const myPayment = await stripe.payementIntents.create({
+    console.log("api is hitting ")
+    console.log("req.body,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,", req.body);
+
+    const myPayment = await stripe.paymentIntents.create({
       amount: req.body.amount,
       currency: "usd",
       metadata: {
@@ -16,6 +19,7 @@ router.post(
       success: true,
       client_secret: myPayment.client_secret,
     });
+      console.log("🚀 ~ res.status ~  myPayment:",  myPayment)
   })
 );
 

@@ -8,10 +8,11 @@ const Product = require("../model/product");
 
 router.post(
   "/create-order",
-  isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
+    console.log("api is hitting now")
     try {
       const { cart, shippingAddress, user, totalPrice, paymentInfo } = req.body;
+      console.log("req.body,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,", req.body);
       //  group cart item by shopid
       const shopItemsMap = new Map();
       for (const item of cart) {
@@ -37,8 +38,10 @@ router.post(
         success: true,
         orders,
       });
+        console.log("🚀 ~ res.status ~ orders:", orders)
     } catch (error) {
       return next(new ErrorHandler(error.message, 400));
     }
   })
 );
+module.exports = router;

@@ -10,6 +10,9 @@ import {
 } from "@stripe/react-stripe-js";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { server } from "../../server";
+import { toast } from "react-toastify";
 const Payment = () => {
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -18,7 +21,7 @@ const Payment = () => {
   const [open, setOpen] = useState(false);
 
   const [orderData, setOrderData] = useState([]);
-  console.log("🚀 ~ Payment ~ orderData:", orderData);
+  // console.log("🚀 ~ Payment ~ orderData:", orderData);
   useEffect(() => {
     const orderData = JSON.parse(localStorage.getItem("latestOrder"));
     setOrderData(orderData);
@@ -35,12 +38,63 @@ const Payment = () => {
   const paymentData = {
     amount: Math.round(orderData?.totalPrice * 100),
   };
-  const paymentHandler = async (e) => {
-    e.preventDefault();
+  const order = {
+    cart: orderData?.cart,
+    shippingAddress: orderData?.shippingAddress,
+    user: user && user,
+    totalPrice: orderData?.totalPrice,
   };
-  const cashOnDeliveryHandler=()=>{
-    console.log("object")
-  }
+  const paymentHandler = async (e) => {
+    console.log("🚀 ~ paymentHandler ~ paymentData:", paymentData);
+
+    e.preventDefault();
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.post(
+        `${server}/payment/process`,
+        paymentData,
+        config
+      );
+      console.log("🚀 ~ paymentHandler ~ data:", data);
+      const client_secret = data.client_secret;
+      if (!stripe || !elements) return;
+      const result = await stripe.confirmCardPayment(client_secret, {
+        payment_method: {
+          card: elements.getElement(CardNumberElement),
+        },
+      });
+      if (result.error) {
+        toast.error(result.error.message);
+      } else {
+        if (result.paymentIntent.status === "succeeded") {
+          order.payementInfo = {
+            id: result.paymentIntent.id,
+            status: result.paymentIntent.status,
+            type: "Credit Card",
+          };
+          await axios
+            .post(`${server}/order/create-order`, order, config)
+            .then((res) => {
+              console.log("🚀 ~ .then ~ res:", res);
+              setOpen(false);
+              navigate("order/succes");
+              toast.success("order successful!");
+              localStorage.setItem("cartItems", JSON.stringify([]));
+              localStorage.setItem("latestOrder", JSON.stringify([]));
+            });
+        }
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+  const cashOnDeliveryHandler = () => {
+    console.log("object");
+  };
   return (
     <div className="w-full flex flex-col items-center py-8">
       <div className="w-[90%] 1000px:w-[70%] block 800px:flex">
@@ -72,10 +126,6 @@ const PaymentInfo = ({
   paymentHandler,
   cashOnDeliveryHandler,
 }) => {
-  console.log("🚀 ~ cashOnDeliveryHandler:", cashOnDeliveryHandler);
-  console.log("🚀 ~ paymentHandler:", paymentHandler);
-  console.log("🚀 ~ createOrder:", createOrder);
-  console.log("🚀 ~ user:", user);
   const [select, setSelect] = useState(1);
 
   return (
@@ -99,7 +149,7 @@ const PaymentInfo = ({
         {/* pay with card */}
         {select === 1 ? (
           <div className="w-full flex border-b">
-            <form className="w-full">
+            <form className="w-full" onSubmit={paymentHandler}>
               <div className="w-full flex pb-3">
                 <div className="w-[50%]">
                   <label className="block pb-2">Name On Card</label>
@@ -107,30 +157,30 @@ const PaymentInfo = ({
                     required
                     placeholder={user && user.name}
                     className={`${styles.input} !w-[95%] text-[#444]`}
-                    // value={user && user.name}
+                    value={user && user.name}
                   />
                 </div>
                 <div className="w-[50%]">
                   <label className="block pb-2">Exp Date</label>
                   <CardExpiryElement
-                  className={`${styles.input}`}
-                  options={{
-                    style: {
-                      base: {
-                        fontSize: "19px",
-                        lineHeight: 1.5,
-                        color: "#444",
-                      },
-                      empty: {
-                        color: "#3a120a",
-                        backgroundColor: "transparent",
-                        "::placeholder": {
+                    className={`${styles.input}`}
+                    options={{
+                      style: {
+                        base: {
+                          fontSize: "19px",
+                          lineHeight: 1.5,
                           color: "#444",
                         },
+                        empty: {
+                          color: "#3a120a",
+                          backgroundColor: "transparent",
+                          "::placeholder": {
+                            color: "#444",
+                          },
+                        },
                       },
-                    },
-                  }}
-                />
+                    }}
+                  />
                 </div>
               </div>
 
@@ -138,46 +188,46 @@ const PaymentInfo = ({
                 <div className="w-[50%]">
                   <label className="block pb-2">Card Number</label>
                   <CardNumberElement
-                  className={`${styles.input} !h-[35px] !w-[95%]`}
-                  options={{
-                    style: {
-                      base: {
-                        fontSize: "19px",
-                        lineHeight: 1.5,
-                        color: "#444",
-                      },
-                      empty: {
-                        color: "#3a120a",
-                        backgroundColor: "transparent",
-                        "::placeholder": {
+                    className={`${styles.input} !h-[35px] !w-[95%]`}
+                    options={{
+                      style: {
+                        base: {
+                          fontSize: "19px",
+                          lineHeight: 1.5,
                           color: "#444",
                         },
+                        empty: {
+                          color: "#3a120a",
+                          backgroundColor: "transparent",
+                          "::placeholder": {
+                            color: "#444",
+                          },
+                        },
                       },
-                    },
-                  }}
-                />
+                    }}
+                  />
                 </div>
                 <div className="w-[50%]">
                   <label className="block pb-2">CVV</label>
                   <CardCvcElement
-                  className={`${styles.input} !h-[35px]`}
-                  options={{
-                    style: {
-                      base: {
-                        fontSize: "19px",
-                        lineHeight: 1.5,
-                        color: "#444",
-                      },
-                      empty: {
-                        color: "#3a120a",
-                        backgroundColor: "transparent",
-                        "::placeholder": {
+                    className={`${styles.input} !h-[35px]`}
+                    options={{
+                      style: {
+                        base: {
+                          fontSize: "19px",
+                          lineHeight: 1.5,
                           color: "#444",
                         },
+                        empty: {
+                          color: "#3a120a",
+                          backgroundColor: "transparent",
+                          "::placeholder": {
+                            color: "#444",
+                          },
+                        },
                       },
-                    },
-                  }}
-                />
+                    }}
+                  />
                 </div>
               </div>
               <input
