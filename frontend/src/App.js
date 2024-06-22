@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import {
   BrowserRouter,
@@ -48,6 +48,11 @@ import Checkout from "./components/Checkout/Checkout.jsx";
 import { getAllProducts } from "./redux/actions/product.js";
 import { getAllEvent, getAlleventsShop } from "./redux/actions/event.js";
 function App() {
+  const [stipeApiKey, setStripeApiKey] = useState("");
+  async function getStripeApiKey() {
+    const { data } = await axios.get(`${server}/payement/stripeapikey`);
+    setStripeApiKey(data.getStripeApiKey);
+  }
   const { loading } = useSelector((state) => state.user);
 
   const { isLoading, isSeller } = useSelector((state) => state.seller);
@@ -57,6 +62,7 @@ function App() {
     Store.dispatch(loadSeller());
     Store.dispatch(getAllProducts());
     Store.dispatch(getAllEvent());
+    getStripeApiKey();
   }, []);
   // console.log(isSeller, seller);
 
