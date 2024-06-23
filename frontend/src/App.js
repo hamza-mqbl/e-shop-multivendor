@@ -24,6 +24,7 @@ import {
   ShopCreatePage,
   SellerActivationPage,
   ShopLoginPage,
+  OrderSuccessPage
 } from "./routes/Routes.js";
 import ProtectedRoute from "./routes/ProtectedRoute.js";
 import { ToastContainer, toast } from "react-toastify";
@@ -125,10 +126,12 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/order/success" element={<OrderSuccessPage />} />
 
             {/* shop routes */}
             <Route path="/shop-create" element={<ShopCreatePage />} />
             <Route path="/shop-login" element={<ShopLoginPage />} />
+
             <Route
               path="/shop/:id"
               element={

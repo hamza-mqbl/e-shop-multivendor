@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { response } from 'express';
 import styles from "../../styles/styles";
 import { RxCross1 } from "react-icons/rx";
 import {
@@ -13,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
+import { application } from "express";
 const Payment = () => {
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -28,12 +30,58 @@ const Payment = () => {
   }, []);
   const createOrder = (data, actions) => {
     //
+    return actions.order
+      .create({
+        purchase_units: [
+          {
+            description: "Sunflower",
+            amount: {
+              currency_code: "USD",
+              value: orderData?.totalPrice,
+            },
+          },
+        ],
+        application_context: {
+          shipping_preference: "No_SHIPPING",
+        },
+      })
+      .then((orderId) => {
+        return orderId;
+      });
   };
   const onApprove = async (data, actions) => {
     console.log("onaaprove");
+    return actions.order.capture().then(function (details) {
+      const { payer } = details;
+      let paymentInfo = payer;
+      if (paymentInfo !== undefined) {
+        paypalPayementHandler(paymentInfo);
+      }
+    });
   };
   const paypalPayementHandler = async (payementInfo) => {
     console.log("paypalpayemnt handler");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    order.payementInfo = {
+      id: payementInfo.payer_id,
+      status: "succeeded",
+      type: "Paypal",
+    };
+    await axios
+      .post(`${server}/order/create-order`, order, config)
+      .then((res) => {
+        console.log("🚀 ~ .then ~ res:", res);
+        setOpen(false);
+        navigate("/order/success");
+        toast.success("order successful!");
+        localStorage.setItem("cartItems", JSON.stringify([]));
+        localStorage.setItem("latestOrder", JSON.stringify([]));
+        window.location.reload();
+      });
   };
   const paymentData = {
     amount: Math.round(orderData?.totalPrice * 100),
@@ -81,10 +129,11 @@ const Payment = () => {
             .then((res) => {
               console.log("🚀 ~ .then ~ res:", res);
               setOpen(false);
-              navigate("order/succes");
+              navigate("/order/success");
               toast.success("order successful!");
               localStorage.setItem("cartItems", JSON.stringify([]));
               localStorage.setItem("latestOrder", JSON.stringify([]));
+              window.location.reload();
             });
         }
       }
@@ -92,6 +141,7 @@ const Payment = () => {
       toast.error(error);
     }
   };
+
   const cashOnDeliveryHandler = () => {
     console.log("object");
   };

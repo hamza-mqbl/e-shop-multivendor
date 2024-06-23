@@ -5,12 +5,12 @@ import Header from "../components/layout/Header";
 
 import ProductCard from "../components/Route/ProductCard/ProductCard";
 import styles from "../styles/styles";
-import { productData } from "../static/data";
+// import { productData } from "../static/data";
 
 const ProductsPage = () => {
   const [searchParams] = useSearchParams();
   const categoryData = searchParams.get("category");
-    const {allProducts,isLoading} = useSelector((state) => state.products);
+  const { allProducts, isLoading } = useSelector((state) => state.products);
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -20,7 +20,8 @@ const ProductsPage = () => {
       setData(d);
     } else {
       const d =
-        allProducts && [...allProducts].filter((i) => i.category === categoryData);
+        allProducts &&
+        [...allProducts].filter((i) => i.category === categoryData);
       setData(d);
     }
     window.scrollTo(0, 0);
@@ -43,7 +44,6 @@ const ProductsPage = () => {
             </h1>
           ) : null}
         </div>
-       
       </div>
     </>
   );
