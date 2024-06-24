@@ -56,15 +56,15 @@ const Payment = () => {
       }
     });
   };
-  const paypalPayementHandler = async (payementInfo) => {
+  const paypalPayementHandler = async (paymentInfo) => {
     console.log("paypalpayemnt handler");
     const config = {
       headers: {
         "Content-Type": "application/json",
       },
     };
-    order.payementInfo = {
-      id: payementInfo.payer_id,
+    order.paymentInfo = {
+      id: paymentInfo.payer_id,
       status: "succeeded",
       type: "Paypal",
     };
@@ -116,7 +116,7 @@ const Payment = () => {
         toast.error(result.error.message);
       } else {
         if (result.paymentIntent.status === "succeeded") {
-          order.payementInfo = {
+          order.paymentInfo = {
             id: result.paymentIntent.id,
             status: result.paymentIntent.status,
             type: "Credit Card",
@@ -139,8 +139,28 @@ const Payment = () => {
     }
   };
 
-  const cashOnDeliveryHandler = () => {
+  const cashOnDeliveryHandler = async (e) => {
     console.log("object");
+    e.preventDefault();
+    order.paymentInfo = {
+      type: "Cash on Delivery",
+    };
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    await axios
+      .post(`${server}/order/create-order`, order, config)
+      .then((res) => {
+        console.log("🚀 ~ .then ~ res:", res);
+        setOpen(false);
+        navigate("/order/success");
+        toast.success("order successful!");
+        localStorage.setItem("cartItems", JSON.stringify([]));
+        localStorage.setItem("latestOrder", JSON.stringify([]));
+        window.location.reload();
+      });
   };
   return (
     <div className="w-full flex flex-col items-center py-8">
@@ -361,7 +381,7 @@ const PaymentInfo = ({
         {/* cash on delivery */}
         {select === 3 ? (
           <div className="w-full flex">
-            <form className="w-full">
+            <form className="w-full" onSubmit={cashOnDeliveryHandler}>
               <input
                 type="submit"
                 value="Confirm"
