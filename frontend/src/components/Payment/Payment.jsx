@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { response } from 'express';
 import styles from "../../styles/styles";
-import { RxCross1 } from "react-icons/rx";
 import {
   CardNumberElement,
   CardCvcElement,
@@ -14,7 +12,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
-import { application } from "express";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { RxCross1 } from "react-icons/rx";
 const Payment = () => {
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -29,26 +28,24 @@ const Payment = () => {
     setOrderData(orderData);
   }, []);
   const createOrder = (data, actions) => {
-    //
+    console.log("createOrder");
     return actions.order
       .create({
         purchase_units: [
           {
-            description: "Sunflower",
+            description: "Your description here",
             amount: {
               currency_code: "USD",
               value: orderData?.totalPrice,
             },
           },
         ],
-        application_context: {
-          shipping_preference: "No_SHIPPING",
-        },
       })
       .then((orderId) => {
         return orderId;
       });
   };
+
   const onApprove = async (data, actions) => {
     console.log("onaaprove");
     return actions.order.capture().then(function (details) {
@@ -313,8 +310,33 @@ const PaymentInfo = ({
             <div
               className={`${styles.button} !bg-[#f63b60] text-white h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
             >
-              Pay Now
+              <span onClick={() => setOpen(true)}>Pay Now</span>
             </div>
+            {open && (
+              <div className="w-full fixed top-0 left-0 bg-[#00000039] h-screen flex items-center justify-center z-[99999]">
+                <div className="w-full 800px:w-[40%] h-screen 800px:h-[80vh] bg-white rounded-[5px] shadow flex flex-col justify-center p-8 relative overflow-y-scroll">
+                  <div className="w-full flex justify-end p-3">
+                    <RxCross1
+                      size={30}
+                      className=" cursor-pointer absolute top-3 right-3"
+                      onClick={() => setOpen(false)}
+                    />
+                  </div>
+                  <PayPalScriptProvider
+                    options={{
+                      "client-id":
+                        "ASEwIwBSNLyGNzOquq0UQW5IljQ7JkYZmjcq1KrOCLPaol_4tZsYej_Vm9_lMwoHi8USY8-2avFTcHlh",
+                    }}
+                  >
+                    <PayPalButtons
+                      style={{ layout: "vertical" }}
+                      onApprove={onApprove}
+                      createOrder={createOrder}
+                    />
+                  </PayPalScriptProvider>
+                </div>
+              </div>
+            )}
           </div>
         ) : null}
       </div>
@@ -369,7 +391,9 @@ const CartData = ({ orderData }) => {
       <br />
       <div className="flex justify-between border-b pb-3">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">Discount:</h3>
-        <h5 className="text-[18px] font-[600]">${orderData?.discountPrice}</h5>
+        <h5 className="text-[18px] font-[600]">
+          {orderData?.discountPrice ? "$" + orderData?.discountPrice : "-"}
+        </h5>
       </div>
       <h5 className="text-[18px] font-[600] text-end pt-3">
         ${orderData?.totalPrice}
