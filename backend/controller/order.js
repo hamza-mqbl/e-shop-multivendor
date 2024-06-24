@@ -70,9 +70,16 @@ router.get(
   catchAsyncErrors(async (req, res, next) => {
     console.log("API is hitting ");
     try {
-      const orders = await Order.find({ "cart.shopId": req.params.shopId }).sort({
+      const orders = await Order.find({
+        "cart.shopId": req.params.shopId,
+      }).sort({
         createdAt: -1,
       });
+      if (orders.length == 0) {
+        res.status(404).json({
+          message: "there is no order for this shop",
+        });
+      }
       res.status(200).json({
         success: true,
         orders,
