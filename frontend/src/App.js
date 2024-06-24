@@ -43,7 +43,8 @@ import {
   ShopAllEvents,
   ShopAllCupouns,
   ShopPreviewPage,
-  ShopAllOrders
+  ShopAllOrders,
+  ShopOrderDetails
 } from "./routes/ShopRoutes.js";
 import Loader from "./components/layout/Loader.jsx";
 import Checkout from "./components/Checkout/Checkout.jsx";
@@ -170,6 +171,14 @@ function App() {
               element={
                 <sellerProtectedRoute>
                   <ShopAllOrders />
+                </sellerProtectedRoute>
+              }
+            />
+            <Route
+              path="shop/order/:id"
+              element={
+                <sellerProtectedRoute>
+                  <ShopOrderDetails />
                 </sellerProtectedRoute>
               }
             />
