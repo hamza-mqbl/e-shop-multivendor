@@ -9,7 +9,7 @@ const Product = require("../model/product");
 router.post(
   "/create-order",
   catchAsyncErrors(async (req, res, next) => {
-    console.log("api is hitting now")
+    console.log("api is hitting now");
     try {
       const { cart, shippingAddress, user, totalPrice, paymentInfo } = req.body;
       console.log("req.body,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,", req.body);
@@ -38,10 +38,49 @@ router.post(
         success: true,
         orders,
       });
-        console.log("🚀 ~ res.status ~ orders:", orders)
+      console.log("🚀 ~ res.status ~ orders:", orders);
     } catch (error) {
       return next(new ErrorHandler(error.message, 400));
     }
   })
 );
+// get all order for user
+router.get(
+  "/get-all-orders/:userId",
+  catchAsyncErrors(async (req, res, next) => {
+    // console.log(req.params.userId);
+    console.log("api is hitting ");
+    try {
+      const orders = await Order.find({ "user._id": req.params.userId }).sort({
+        createdAt: -1,
+      });
+      res.status(200).json({
+        success: true,
+        orders,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  })
+);
+
+// get all orders for seller
+router.get(
+  "/get-seller-all-orders/:shopId",
+  catchAsyncErrors(async (req, res, next) => {
+    console.log("API is hitting ");
+    try {
+      const orders = await Order.find({ "cart.shopId": req.params.shopId }).sort({
+        createdAt: -1,
+      });
+      res.status(200).json({
+        success: true,
+        orders,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  })
+);
+
 module.exports = router;
