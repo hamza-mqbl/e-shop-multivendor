@@ -14,7 +14,7 @@ app.use(
   })
 );
 // app.use()
-app.use("/", express.static("uploads"));
+app.use("/", express.static("uploads"));  //setup done for 2nd branch
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 
 // config
