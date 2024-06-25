@@ -8,7 +8,6 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const CoupounCode = require("../model/cupounCode");
 const router = express.Router();
 
-// create cupouncode
 // create coupoun code
 router.post(
   "/create-coupon-code",
