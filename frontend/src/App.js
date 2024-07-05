@@ -25,6 +25,9 @@ import {
   SellerActivationPage,
   ShopLoginPage,
   OrderSuccessPage,
+  OrderDetailsPage,
+  TrackOrderPage,
+  ShopSettingsPage
 } from "./routes/Routes.js";
 import ProtectedRoute from "./routes/ProtectedRoute.js";
 import { ToastContainer, toast } from "react-toastify";
@@ -44,7 +47,8 @@ import {
   ShopAllCupouns,
   ShopPreviewPage,
   ShopAllOrders,
-  ShopOrderDetails
+  ShopOrderDetails,
+  ShopallRefunds
 } from "./routes/ShopRoutes.js";
 import Loader from "./components/layout/Loader.jsx";
 import Checkout from "./components/Checkout/Checkout.jsx";
@@ -174,11 +178,43 @@ function App() {
                 </sellerProtectedRoute>
               }
             />
+             <Route
+          path="/settings"
+          element={
+            <sellerProtectedRoute>
+              <ShopSettingsPage />
+            </sellerProtectedRoute>
+          }
+        />
             <Route
               path="shop/order/:id"
               element={
                 <sellerProtectedRoute>
                   <ShopOrderDetails />
+                </sellerProtectedRoute>
+              }
+            />
+            <Route
+              path="user/order/:id"
+              element={
+                <sellerProtectedRoute>
+                  <OrderDetailsPage />
+                </sellerProtectedRoute>
+              }
+            />
+             <Route
+              path="dashboard-refunds"
+              element={
+                <sellerProtectedRoute>
+                  <ShopallRefunds />
+                </sellerProtectedRoute>
+              }
+            />
+            <Route
+              path="user/track/order/:id"
+              element={
+                <sellerProtectedRoute>
+                  <TrackOrderPage />
                 </sellerProtectedRoute>
               }
             />
