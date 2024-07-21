@@ -4,6 +4,7 @@ import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { BsStarHalf } from "react-icons/bs";
 
 const Rating = ({ ratings }) => {
+  console.log("🚀 ~ Rating ~ ratings:", ratings)
   const starts = [];
   for (let i = 1; i <= 5; i++) {
     if (i <= ratings) {

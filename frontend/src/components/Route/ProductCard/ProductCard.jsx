@@ -16,7 +16,7 @@ import { toast } from "react-toastify";
 import { addToCart } from "../../../redux/actions/cart.js";
 import Rating from "../../Products/Rating.jsx";
 
-const ProductCard = ({ data }) => {
+const ProductCard = ({ data,isEvent }) => {
   console.log("🚀 ~ ProductCard ~ data:", data);
   console.log(data);
   const dispatch = useDispatch();
@@ -65,7 +65,7 @@ const ProductCard = ({ data }) => {
   return (
     <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer ">
       <div className="flex justify-end"></div>
-      <Link to={`/product/${data._id}`}>
+      <Link to={`${isEvent===true?`/product/${data._id}?isEvent=true`:`/product/${data._id}`}`}>
         <img
           src={`${data.images && data.images[0]?.url}`}
           className="w-full h-[170px] object-contain "

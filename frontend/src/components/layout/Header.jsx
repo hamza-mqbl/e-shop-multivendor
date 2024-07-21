@@ -33,7 +33,7 @@ const Header = ({ activeHeading }) => {
   const [openCart, setOpenCart] = useState(false);
   const [openWishList, setOpenWishList] = useState(false);
   const [open, setOpen] = useState(false);
-  // console.log(user);
+  console.log(user);
   console.log(allProducts);
   const handleSearchChange = (e) => {
     const term = e.target.value;

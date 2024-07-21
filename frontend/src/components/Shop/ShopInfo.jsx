@@ -15,6 +15,7 @@ const ShopInfo = ({ isOwner }) => {
 
   const { id } = useParams();
   const [data, setData] = useState({});
+  
   useEffect(() => {
     dispatch(getAllProductsShop(id));
 
@@ -26,7 +27,7 @@ const ShopInfo = ({ isOwner }) => {
       })
       .catch((error) => console.log(error));
   }, []);
-  console.log(data);
+  console.log(data.avatar);
   const navigate = useNavigate();
   const logoutHandler = async () => {
     axios.get(`${server}/shop/logout`, {
@@ -42,7 +43,7 @@ const ShopInfo = ({ isOwner }) => {
       <div className="w-full py-5 ">
         <div className="w-full flex items-center justify-center">
           <img
-            src={`${data.avatar?.url}`}
+            src={`${backend_url}/${data.avatar}`}
             className="w-[150px] h-[150px] object-cover rounded-full"
             alt="sorry"
           />
