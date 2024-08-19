@@ -1,6 +1,7 @@
 const app = require("./app");
 const mongoose=require("mongoose")
 const connectDatabase=require("./db/Database.js")
+const cloudinary = require("cloudinary").v2;
 
 // handling uncaught Execption
 
@@ -15,15 +16,18 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
     path: "config/.env",
   });
 }
+console.log(process.env.CLOUDINARY_NAME,"jjj");
+console.log(process.env.CLOUDINARY_API_KEY,"jjjsss"),
+console.log(process.env.CLOUDINARY_API_SECRET,'dahfasdfhk')
 
 // connect 
 connectDatabase();
 
-// cloudinary.config({
-//   cloud_name: process.env.CLOUDINARY_NAME,
-//   api_key: process.env.CLOUDINARY_API_KEY,
-//   api_secret: process.env.CLOUDINARY_API_SECRET
-// })
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
 
 
 // create server

@@ -29,8 +29,8 @@ const CreateProduct = () => {
     if (success) {
       console.log(success)
       toast.success("Product created successfully");
-      navigate("/dashboard");
-      window.location.reload();
+      // navigate("/dashboard");
+      // window.location.reload();
     }
   }, [dispatch, error, success]);
   const handleImageChange = (e) => {

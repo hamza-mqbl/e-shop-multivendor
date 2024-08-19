@@ -50,8 +50,8 @@ const CreateEvent = () => {
       if (success === true) {
         console.log("Success is true. Navigating to /dashboard");
         toast.success("Event created successfully!");
-        navigate("/dashboard");
-        window.location.reload();
+        // navigate("/dashboard");
+        // window.location.reload();
       }
       if (error) {
         toast.error(error);

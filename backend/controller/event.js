@@ -1,44 +1,122 @@
 const express = require("express");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const { upload } = require("../multer");
+// const { upload } = require("../multer");
 const Shop = require("../model/shop");
 const Event = require("../model/event");
 // const event = require("../model/event");
 const { isSeller } = require("../middleware/auth");
+const ErrorHandler = require("../utils/ErrorHandler");
+const multer = require("multer");
 const router = express.Router();
+const cloudinary = require("cloudinary").v2;
 
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 // create event
+// Create event route
 router.post(
   "/create-event",
-  upload.array("images"),
+  upload.array("images"), // Use `upload.array` to handle multiple files
   catchAsyncErrors(async (req, res, next) => {
     try {
       const shopId = req.body.shopId;
       const shop = await Shop.findById(shopId);
-      // console.log(shop);
-      if (!shopId) {
-        return next(new ErrorHandler("Shop id is invalid", 400));
-      } else {
-        const files = req.files;
-        const imageUrls = files.map(
-          (file) => `${process.env.BASE_URL}/${file.filename}`
-        );
-        const eventData = req.body;
-        eventData.images = imageUrls.map((url) => ({ url }));
-        eventData.shop = shop;
-        // console.log(eventData);
-        const event = await Event.create(eventData);
-        // console.log(event);
-        res.status(201).json({
-          success: true,
-          event,
-        });
+
+      if (!shop) {
+        return next(new ErrorHandler("Shop Id is invalid!", 400));
       }
+
+      let imagesLinks = [];
+
+      if (req.files && req.files.length > 0) {
+        // Iterate over each file and upload to Cloudinary
+        for (let i = 0; i < req.files.length; i++) {
+          const result = await new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                folder: "products",
+              },
+              (error, result) => {
+                if (error) {
+                  return reject(new ErrorHandler("Cloudinary upload error", 500));
+                }
+                resolve(result);
+              }
+            );
+            uploadStream.end(req.files[i].buffer);
+          });
+
+          imagesLinks.push({
+            public_id: result.public_id,
+            url: result.secure_url,
+          });
+        }
+      }
+
+      const productData = req.body;
+      productData.images = imagesLinks;
+      productData.shop = shop;
+
+      const event = await Event.create(productData);
+
+      res.status(201).json({
+        success: true,
+        event,
+      });
     } catch (error) {
-      return next(new ErrorHandler(error, 404));
+      return next(new ErrorHandler(error.message, 400));
     }
   })
 );
+// router.post(
+//   "/create-event",
+//   catchAsyncErrors(async (req, res, next) => {
+//     console.log(req.body,"it is that")
+//     try {
+//       const shopId = req.body.shopId;
+//       console.log("🚀 ~ catchAsyncErrors ~ shopId:", shopId)
+//       const shop = await Shop.findById(shopId);
+//       console.log("🚀 ~ catchAsyncErrors ~ shop:", shop)
+//       if (!shop) {
+//         return next(new ErrorHandler("Shop Id is invalid!", 400));
+//       } else {
+//         let images = [];
+
+//         if (typeof req.body.images === "string") {
+//           images.push(req.body.images);
+//         } else {
+//           images = req.body.images;
+//         }
+
+//         const imagesLinks = [];
+
+//         for (let i = 0; i < images.length; i++) {
+//           const result = await cloudinary.v2.uploader.upload(images[i], {
+//             folder: "products",
+//           });
+
+//           imagesLinks.push({
+//             public_id: result.public_id,
+//             url: result.secure_url,
+//           });
+//         }
+
+//         const productData = req.body;
+//         productData.images = imagesLinks;
+//         productData.shop = shop;
+
+//         const event = await Event.create(productData);
+
+//         res.status(201).json({
+//           success: true,
+//           event,
+//         });
+//       }
+//     } catch (error) {
+//       return next(new ErrorHandler(error, 400));
+//     }
+//   })
+// );
 
 // get all event
 router.get(

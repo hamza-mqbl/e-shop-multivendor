@@ -58,7 +58,7 @@ const ShopSettings = () => {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res);
+        console.log(res,"thst sd");
         dispatch(loadSeller());
       })
       .catch((error) => {
@@ -98,7 +98,7 @@ const ShopSettings = () => {
               src={
                 avatar
                   ? URL.createObjectURL(avatar)
-                  : `${backend_url}/${seller.avatar}`
+                  : `${seller.avatar?.url}`
               }
               alt=""
               className="w-[200px] h-[200px] rounded-full cursor-pointer"

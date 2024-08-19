@@ -1,9 +1,11 @@
 const express = require("express");
 const path = require("path");
 const User = require("../model/user");
-const { upload } = require("../multer");
+// const { upload } = require("../multer");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
+const cloudinary = require("cloudinary").v2;
+
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/sendToken");
 const { isAuthenticated, isSeller } = require("../middleware/auth");
@@ -11,27 +13,47 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const Shop = require("../model/shop");
 const sendShopToken = require("../utils/shopToken");
-// const upload = require("../multer");
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 router.post("/create-shop", upload.single("file"), async (req, res, next) => {
   try {
     const { email } = req.body;
+    console.log("🚀 ~ router.post ~ req.body:", req.body)
     const sellerEmail = await Shop.findOne({ email });
+
     if (sellerEmail) {
       return next(new ErrorHandler("User already exists", 400));
     }
-    const filename = req.file.filename;
-    // const fileUrl = path.join(filename);
-    const fileUrl = `${process.env.BASE_URL}/${filename}`; // Assuming BASE_URL is your server's base URL
+
+    // Upload the image to Cloudinary
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: "shop-avatars", // Folder in Cloudinary to store the images
+        },
+        (error, result) => {
+          if (error) {
+            return reject(new ErrorHandler(error.message, 500));
+          }
+          resolve(result);
+        }
+      );
+      uploadStream.end(req.file.buffer); // Using the buffer to upload directly
+    });
+
+    const fileUrl = result.secure_url; // Get the secure URL from Cloudinary
 
     const seller = {
       name: req.body.name,
       email: email,
       password: req.body.password,
-      avatar: { url: fileUrl },
+      avatar: { url: fileUrl, public_id: result.public_id }, // Store the public ID as well for potential future use
       address: req.body.address,
       phoneNumber: req.body.phoneNumber,
       zipCode: req.body.zipCode,
     };
+
     const activationToken = createActivationToken(seller);
     const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`;
 
@@ -43,7 +65,7 @@ router.post("/create-shop", upload.single("file"), async (req, res, next) => {
       });
       res.status(201).json({
         success: true,
-        message: `please check your email:- ${seller.email} to activate your shop!`,
+        message: `Please check your email: ${seller.email} to activate your shop!`,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -189,29 +211,53 @@ router.get(
     }
   })
 );
-// update user avatar
 router.put(
   "/update-shop-avatar",
   isSeller,
-  upload.single("image"),
+  upload.single("image"), // Handle single image upload
   catchAsyncErrors(async (req, res, next) => {
+    console.log("first")
     try {
       const existUser = await Shop.findById(req.seller._id);
-      const existAvatarPath = `uploads/${existUser.avatar}`;
-      // fs.unlinkSync(existAvatarPath);
-      const fileUrl = path.join(req.file.filename);
-      const user = await Shop.findByIdAndUpdate(req.seller._id, {
-        avatar: fileUrl,
+
+      // Upload the new image to Cloudinary
+      const result = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "shop-avatars",
+          },
+          (error, result) => {
+            if (error) {
+              return reject(new ErrorHandler(error.message, 500));
+            }
+            resolve(result);
+          }
+        );
+        uploadStream.end(req.file.buffer);
       });
+
+      // Update the avatar URL in the Shop document
+      const updatedShop = await Shop.findByIdAndUpdate(
+        req.seller._id,
+        {
+          avatar: {
+            public_id: result.public_id,
+            url: result.secure_url,
+          },
+        },
+        { new: true } // Return the updated document
+      );
+
       res.status(200).json({
         success: true,
-        user,
+        user: updatedShop,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
   })
 );
+
 // update seller info
 router.put(
   "/update-seller-info",

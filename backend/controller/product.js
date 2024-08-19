@@ -5,9 +5,13 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
 const Shop = require("../model/shop");
 const { isSeller, isAuthenticated } = require("../middleware/auth");
+const cloudinary = require("cloudinary").v2;
 
-const { upload } = require("../multer");
+// const { upload } = require("../multer");
 const order = require("../model/order");
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 // create product
 router.post(
   "/create-product",
@@ -16,26 +20,48 @@ router.post(
     try {
       const shopId = req.body.shopId;
       const shop = await Shop.findById(shopId);
-      if (!shopId) {
-        return next(new ErrorHandler("Shop id is invalid", 400));
-      } else {
-        const files = req.files;
-        const imageUrls = files.map(
-          (file) => `${process.env.BASE_URL}/${file.filename}`
-        );
 
-        const productData = req.body;
-        productData.images = imageUrls.map((url) => ({ url }));
-        productData.shop = shop;
-        console.log(productData);
-        const product = await Product.create(productData);
-        res.status(201).json({
-          success: true,
-          product,
+      if (!shop) {
+        return next(new ErrorHandler("Shop id is invalid", 400));
+      }
+
+      const files = req.files;
+      const imageUrls = [];
+
+      for (const file of files) {
+        const result = await new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            {
+              folder: "product-images", // Folder in Cloudinary to store the images
+            },
+            (error, result) => {
+              if (error) {
+                return reject(new ErrorHandler(error.message, 500));
+              }
+              resolve(result);
+            }
+          );
+          uploadStream.end(file.buffer); // Using the buffer to upload directly
+        });
+
+        imageUrls.push({
+          url: result.secure_url,
+          public_id: result.public_id, // Store the public ID for potential future use
         });
       }
+
+      const productData = req.body;
+      productData.images = imageUrls; // Assign Cloudinary URLs to the product
+      productData.shop = shop;
+
+      const product = await Product.create(productData);
+
+      res.status(201).json({
+        success: true,
+        product,
+      });
     } catch (error) {
-      return next(new ErrorHandler(error, 404));
+      return next(new ErrorHandler(error.message, 404));
     }
   })
 );

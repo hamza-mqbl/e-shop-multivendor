@@ -8,9 +8,10 @@ const router = express.Router();
 
 // crete new messsage
 router.post(
-  "/create--new-message",
+  "/create-new-message",
   upload.array("image"),
   catchAsyncErrors(async (req, res, next) => {
+    console.log(req.body, "kkkk");
     try {
       const messageData = req.body;
 
@@ -25,6 +26,7 @@ router.post(
       const message = new Messages({
         conversationId: messageData.conversationId,
         sender: messageData.sender,
+        text:messageData.text,
         images: messageData.images ? messageData.images : undefined,
       });
       await message.save();
@@ -37,3 +39,23 @@ router.post(
     }
   })
 );
+
+// get all messages with conversation id
+router.get(
+  "/get-all-messages/:id",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const messages = await Messages.find({
+        conversationId: req.params.id,
+      });
+
+      res.status(201).json({
+        success: true,
+        messages,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message), 500);
+    }
+  })
+);
+module.exports = router;

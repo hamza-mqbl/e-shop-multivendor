@@ -4,17 +4,13 @@ import axios from "axios";
 import { server } from "../../server";
 
 export const createevent = (newForm) => async (dispatch) => {
-  console.log("🚀 ~ createevent ~ newForm:", newForm)
+  console.log("🚀 ~ createevent ~ newForm:", newForm);
   try {
     dispatch({
       type: "eventCreateRequest",
     });
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
-    const { data } = await axios.post(
-      `${server}/event/create-event`,
-      newForm,
-      config
-    );
+    const { data } = await axios.post(`${server}/event/create-event`, newForm);
+    console.log("🚀 ~ createevent ~ data:", data);
     dispatch({
       type: "eventCreateSuccess",
       payload: data.event,

@@ -15,6 +15,8 @@ app.use(
 );
 // app.use()
 app.use("/", express.static("uploads")); //setup done for 2nd branch
+// Increase the payload size limit
+app.use(bodyParser.json({ limit: '50mb' })); // Increase limit as needed
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 
 // config
@@ -33,6 +35,7 @@ const coupon = require("./controller/cupounCode");
 const payment = require("./controller/payment");
 const order = require("./controller/order");
 const conversation = require("./controller/converstaion");
+const message = require("./controller/message");
 
 app.use("/api/v2/user", user);
 app.use("/api/v2/shop", shop);
@@ -42,6 +45,7 @@ app.use("/api/v2/coupon", coupon);
 app.use("/api/v2/payment", payment);
 app.use("/api/v2/order", order);
 app.use("/api/v2/conversation", conversation);
+app.use("/api/v2/message", message);
 
 // it is not for errorhandling
 app.use(ErrorHandler);

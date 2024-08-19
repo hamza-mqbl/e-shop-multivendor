@@ -28,6 +28,7 @@ import {
   OrderDetailsPage,
   TrackOrderPage,
   ShopSettingsPage,
+  UserInbox
 } from "./routes/Routes.js";
 import ProtectedRoute from "./routes/ProtectedRoute.js";
 import { ToastContainer, toast } from "react-toastify";
@@ -127,6 +128,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+              <Route
+          path="/inbox"
+          element={
+            <ProtectedRoute>
+              <UserInbox />
+            </ProtectedRoute>
+          }
+        />
             <Route
               path="/checkout"
               element={
