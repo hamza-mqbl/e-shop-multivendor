@@ -7,9 +7,20 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 app.use(express.json());
 app.use(cookieParser());
+const allowedOrigins = [
+  'http://localhost:3000',  // Local development
+  'https://e-shop-multivendor.onrender.com'  // Production
+];
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: function(origin, callback) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   })
 );
