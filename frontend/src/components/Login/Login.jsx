@@ -11,12 +11,16 @@ export const Login = () => {
   const nevigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     await axios
-      .post(`${server}/user/login-user`, {
-        email,
-        password,
-      },{withCredentials:true})
+      .post(
+        `${server}/user/login-user`,
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      )
       .then((res) => {
         toast.success("Login Success!");
         nevigate("/");
@@ -29,7 +33,7 @@ export const Login = () => {
         }
       });
   };
-  
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">

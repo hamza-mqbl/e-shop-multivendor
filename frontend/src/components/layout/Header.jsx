@@ -25,6 +25,7 @@ const Header = ({ activeHeading }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
 
   const { isAuthenticated, user } = useSelector((state) => state.user);
+  console.log("🚀 ~ Header ~ isAuthenticated:", isAuthenticated)
   const { isSeller } = useSelector((state) => state.seller);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
