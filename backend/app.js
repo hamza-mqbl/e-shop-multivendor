@@ -9,6 +9,7 @@ app.use(express.json());
 app.use(cookieParser());
 const allowedOrigins = [
   'http://localhost:3000',  // Local development
+  'http://localhost:8000',  // Local development
   'https://e-shop-multivendor.onrender.com'  // Production
 ];
 
