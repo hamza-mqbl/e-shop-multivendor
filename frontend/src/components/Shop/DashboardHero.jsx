@@ -16,8 +16,8 @@ const DashboardHero = () => {
   const { products } = useSelector((state) => state.products);
 
   useEffect(() => {
-     dispatch(getAllOrdersOfShop(seller._id));
-     dispatch(getAllProductsShop(seller._id));
+     dispatch(getAllOrdersOfShop(seller?._id));
+     dispatch(getAllProductsShop(seller?._id));
   }, [dispatch]);
 
   const availableBalance = seller?.availableBalance.toFixed(2);

@@ -18,6 +18,7 @@ export const ShopLogin = () => {
         password,
       },{withCredentials:true})
       .then((res) => {
+        console.log("🚀 ~ .then ~ res:", res)
         toast.success("Login Success!");
         nevigate("/dashboard");
         window.location.reload(true);

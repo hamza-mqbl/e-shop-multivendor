@@ -27,6 +27,7 @@ export const loadUser = () => async (dispatch) => {
 
 // load seller
 export const loadSeller = () => async (dispatch) => {
+  console.log("server,,,,,,,,,,,,,,",server)
   try {
     dispatch({
       type: "LoadSellerRequest",

@@ -14,6 +14,7 @@ const ShopInfo = ({ isOwner }) => {
   const { products } = useSelector((state) => state.products);
 
   const { id } = useParams();
+  console.log("🚀 ~ ShopInfo ~ id:", id)
   const [data, setData] = useState({});
   
   useEffect(() => {

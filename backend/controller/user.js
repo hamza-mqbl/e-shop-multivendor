@@ -154,6 +154,7 @@ router.post(
 router.post(
   "/login-user",
   catchAsyncErrors(async (req, res, next) => {
+    // console.log("🚀 ~ catchAsyncErrors ~ req:", req)
     try {
       const { email, password } = req.body;
       if (!email || !password) {
@@ -173,10 +174,10 @@ router.post(
         );
       }
       sendToken(user, 201, res);
-      // console.log(
-      //   "🚀 ~ file: user.js:136 ~ catchAsyncErrors ~ sendToken:",
-      //   sendToken
-      // );
+      console.log(
+        "🚀 ~ file: user.js:136 ~ catchAsyncErrors ~ sendToken:",
+        sendToken
+      );
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -189,6 +190,8 @@ router.get(
   "/getuser",
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
+  console.log("🚀 ~ isAuthenticated:", isAuthenticated)
+
     try {
       const user = await User.findById(req.user.id);
       if (!user) {
