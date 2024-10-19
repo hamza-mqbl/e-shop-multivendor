@@ -17,6 +17,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 router.post("/create-user", upload.single("avatar"), async (req, res, next) => {
+  // console.log("this is local testing")
   console.log("File received:", req.file); // Confirm the file is received
 
   try {
@@ -65,7 +66,9 @@ router.post("/create-user", upload.single("avatar"), async (req, res, next) => {
     await user.save();
 
     const activationToken = createActivationToken(user);
-    const activationUrl = `https://e-mart-frontend.vercel.app/activation/${activationToken}`;
+    const activationUrl = `http://13.60.95.182:8000/activation/${activationToken}`;
+
+    // const activationUrl = `http://localhost:8000/activation/${activationToken}`;
 
     try {
       await sendMail({
