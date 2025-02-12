@@ -63,6 +63,9 @@ app.use("/api/v2/payment", payment);
 app.use("/api/v2/order", order);
 app.use("/api/v2/conversation", conversation);
 app.use("/api/v2/message", message);
+app.get("/is", (req, res) => {
+  res.send("Server is running!");
+});
 
 // it is not for errorhandling
 app.use(ErrorHandler);
