@@ -11,6 +11,8 @@ const allowedOrigins = [
   'http://localhost:3000',  // Local development
   'http://localhost:8000',  // Local development
   'http://13.60.95.182:8000',
+  'https://e-shop-server-zeta.vercel.app/',
+  'https://e-shop-frontend-six.vercel.app/',
   'https://e-shop-multivendor.onrender.com'  // Production
 ];
 
