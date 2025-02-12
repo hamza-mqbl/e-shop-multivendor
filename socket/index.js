@@ -101,7 +101,7 @@ io.on("connection", (socket) => {
 
   //when disconnect
   socket.on("disconnect", () => {
-    console.log(`a user disconnected!`);
+    // console.log(`a user disconnected!`);
     removeUser(socket.id);
     io.emit("getUsers", users);
   });

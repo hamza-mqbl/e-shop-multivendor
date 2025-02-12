@@ -8,21 +8,20 @@ const cors = require("cors");
 app.use(express.json());
 app.use(cookieParser());
 const allowedOrigins = [
-  'http://localhost:3000',  // Local development
-  'http://localhost:8000',  // Local development
-  'http://13.60.95.182:8000',
-  'https://e-shop-server-zeta.vercel.app/',
-  'https://e-shop-frontend-six.vercel.app/',
-  'https://e-shop-multivendor.onrender.com'  // Production
+  "http://localhost:3000", // Local development
+  "http://localhost:8000", // Local development
+  "https://e-shop-frontend-six.vercel.app/",
+  "https://e-shop-frontend-git-main-hamza-maqbools-projects-6a9ca7c2.vercel.app/",
+  "https://e-shop-multivendor.onrender.com", // Production
 ];
 
 app.use(
   cors({
-    origin: function(origin, callback) {
+    origin: function (origin, callback) {
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
@@ -31,7 +30,7 @@ app.use(
 // app.use()
 app.use("/", express.static("uploads")); //setup done for 2nd branch
 // Increase the payload size limit
-app.use(bodyParser.json({ limit: '50mb' })); // Increase limit as needed
+app.use(bodyParser.json({ limit: "50mb" })); // Increase limit as needed
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 
 // config
@@ -44,7 +43,7 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 // import routes
 const user = require("./controller/user");
 const player = require("./controller/player.js");
-console.log("🚀 ~ player:", player)
+console.log("🚀 ~ player:", player);
 
 const shop = require("./controller/shop");
 const product = require("./controller/product");
