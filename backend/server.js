@@ -19,9 +19,6 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
     path: "config/.env",
   });
 }
-console.log(process.env.CLOUDINARY_NAME, "jjj");
-console.log(process.env.CLOUDINARY_API_KEY, "jjjsss"),
-  console.log(process.env.CLOUDINARY_API_SECRET, "dahfasdfhk");
 
 // connect
 connectDatabase();

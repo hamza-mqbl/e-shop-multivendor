@@ -41,6 +41,9 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 
 // import routes
 const user = require("./controller/user");
+const player = require("./controller/player.js");
+console.log("🚀 ~ player:", player)
+
 const shop = require("./controller/shop");
 const product = require("./controller/product");
 const event = require("./controller/event");
@@ -50,6 +53,7 @@ const order = require("./controller/order");
 const conversation = require("./controller/converstaion");
 const message = require("./controller/message");
 
+app.use("/api/v2/player", player);
 app.use("/api/v2/user", user);
 app.use("/api/v2/shop", shop);
 app.use("/api/v2/product", product);
