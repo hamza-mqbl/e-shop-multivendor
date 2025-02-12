@@ -1,6 +1,6 @@
 const express = require("express");
 const ErrorHandler = require("./middleware/error");
-
+const serverless = require("serverless-http");
 const app = express();
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
@@ -71,3 +71,4 @@ app.get("/is", (req, res) => {
 app.use(ErrorHandler);
 
 module.exports = app;
+module.exports.handler = serverless(app);
