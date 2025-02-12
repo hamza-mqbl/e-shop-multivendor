@@ -14,6 +14,7 @@ export const createProduct = (newForm) => async (dispatch) => {
       newForm,
       config
     );
+    console.log("tessting deployment ", data);
     dispatch({
       type: "productCreateSuccess",
       payload: data.product,
