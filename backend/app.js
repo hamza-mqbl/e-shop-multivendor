@@ -9,11 +9,13 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-app.use(cors({
-  origin: ["https://e-shop-frontend-six.vercel.app"],  // Allow frontend URL
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: 'https://moglee-project-git-main-hamza-maqbools-projects-6a9ca7c2.vercel.app/', // Replace with your frontend URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 // app.use()
 app.use("/", express.static("uploads")); //setup done for 2nd branch
 // Increase the payload size limit
