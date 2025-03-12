@@ -1,14 +1,13 @@
 const express = require("express");
 const path = require("path");
 const User = require("../model/user");
-const { upload } = require("../multer");
+// const { upload } = require("../multer");
 const multer = require("multer");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/sendToken");
 const cloudinary = require("cloudinary").v2;
-
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const { isAuthenticated } = require("../middleware/auth");
