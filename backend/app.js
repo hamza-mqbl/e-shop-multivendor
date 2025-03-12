@@ -9,11 +9,27 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-app.use(cors({
-  origin: ["https://e-shop-frontend-six.vercel.app"],  // Allow frontend URL
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
+const allowedOrigins = [
+  "http://localhost:3000", // Local development
+  "http://localhost:8000", // Local development
+  "https://e-shop-frontend-six.vercel.app",
+  "https://e-shop-frontend-git-main-hamza-maqbools-projects-6a9ca7c2.vercel.app",
+  "https://e-shop-multivendor.onrender.com", // Production
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 // app.use()
 app.use("/", express.static("uploads")); //setup done for 2nd branch
 // Increase the payload size limit
