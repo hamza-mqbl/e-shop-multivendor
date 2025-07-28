@@ -17,8 +17,7 @@ const upload = multer({ storage });
 
 router.post("/create-user", upload.single("avatar"), async (req, res, next) => {
   // console.log("this is local testing")
-  console.log("File received:", req.file); // Confirm the file is received
-
+  console.log("File received:", req.file);
   try {
     const { name, email, password } = req.body;
 
@@ -87,10 +86,9 @@ router.post("/create-user", upload.single("avatar"), async (req, res, next) => {
   }
 });
 
-
 // Create activation token function
 const createActivationToken = (user) => {
-    // Extract only the fields needed for the JWT payload
+  // Extract only the fields needed for the JWT payload
   const payload = {
     id: user._id,
     name: user.name,
@@ -192,7 +190,7 @@ router.get(
   "/getuser",
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
-  console.log("🚀 ~ isAuthenticated:", isAuthenticated)
+    console.log("🚀 ~ isAuthenticated:", isAuthenticated);
 
     try {
       const user = await User.findById(req.user.id);

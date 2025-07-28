@@ -28,7 +28,7 @@ import {
   OrderDetailsPage,
   TrackOrderPage,
   ShopSettingsPage,
-  UserInbox
+  UserInbox,
 } from "./routes/Routes.js";
 import ProtectedRoute from "./routes/ProtectedRoute.js";
 import { ToastContainer, toast } from "react-toastify";
@@ -51,8 +51,7 @@ import {
   ShopOrderDetails,
   ShopallRefunds,
   ShopWithDrwaMoneyPage,
-  ShopInboxPage
-
+  ShopInboxPage,
 } from "./routes/ShopRoutes.js";
 import Loader from "./components/layout/Loader.jsx";
 import Checkout from "./components/Checkout/Checkout.jsx";
@@ -128,14 +127,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
-              <Route
-          path="/inbox"
-          element={
-            <ProtectedRoute>
-              <UserInbox />
-            </ProtectedRoute>
-          }
-        />
+            <Route
+              path="/inbox"
+              element={
+                <ProtectedRoute>
+                  <UserInbox />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/checkout"
               element={
@@ -262,7 +261,7 @@ function App() {
                 </sellerProtectedRoute>
               }
             />
-             <Route
+            <Route
               path="/dashboard-messages"
               element={
                 <sellerProtectedRoute>
