@@ -10,8 +10,8 @@ process.on("uncaughtException", (err) => {
   console.log(`Error: ${err.message}`);
   console.log(`shutting down the server for handling uncaught exception`);
 });
-console.log("__dirname:", __dirname);  // Log the current directory of the script
-console.log("Frontend Build Path:", path.join(__dirname, "../frontend/build"));  // Log the resolved path
+console.log("__dirname:", __dirname); // Log the current directory of the script
+console.log("Frontend Build Path:", path.join(__dirname, "../frontend/build")); // Log the resolved path
 
 // config
 if (process.env.NODE_ENV !== "PRODUCTION") {
@@ -34,7 +34,6 @@ app.use(express.static(path.join(__dirname, "../frontend/build")));
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
 });
-
 
 // create server
 const server = app.listen(process.env.PORT, () => {
