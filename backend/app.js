@@ -8,13 +8,10 @@ const cors = require("cors");
 app.use(express.json());
 app.use(cookieParser());
 
-
 const allowedOrigins = [
   "http://localhost:3000", // Local development
   "http://localhost:8000", // Local development
-  "https://e-shop-frontend-six.vercel.app",
-  "https://e-shop-frontend-git-main-hamza-maqbools-projects-6a9ca7c2.vercel.app",
-  "https://e-shop-multivendor.onrender.com", // Production
+  "https://e-shop-multivendor.vercel.app",
 ];
 
 app.use(
