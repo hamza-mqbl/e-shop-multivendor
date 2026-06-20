@@ -1,0 +1,61 @@
+# Run the whole stack:  docker compose up --build
+# Frontend:  http://localhost:3000   (nginx)
+# Backend:   http://localhost:8000   (Express API /api/v2)
+# Socket:    http://localhost:4000
+# Mongo:     localhost:27017
+
+services:
+  mongodb:
+    image: mongo:6
+    container_name: eshop-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    container_name: eshop-backend
+    ports:
+      - "8000:8000"
+    # Secrets (JWT, Cloudinary, Stripe, SMTP, ACTIVATION_SECRET) come from your existing .env
+    env_file:
+      - ./backend/config/.env
+    environment:
+      # NODE_ENV=PRODUCTION makes the app skip its own dotenv and trust these vars
+      - NODE_ENV=PRODUCTION
+      - PORT=8000
+      # Use the local Mongo container. To use your existing Atlas DB instead,
+      # comment out the next line (env_file already has the Atlas MONGO_URL)
+      # and you can also remove the mongodb service + depends_on below.
+      - MONGO_URL=mongodb://mongodb:27017/eshop
+    volumes:
+      # persist uploaded message images written by multer
+      - ./uploads:/app/uploads
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+  socket:
+    build: ./socket
+    container_name: eshop-socket
+    ports:
+      - "4000:4000"
+    environment:
+      # socket/index.js listens on process.env.PORT with no default — required
+      - PORT=4000
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: eshop-frontend
+    # host port 3000 so the browser origin matches the backend CORS whitelist
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  mongo-data:
