@@ -107,6 +107,31 @@ select:focus-visible,
   display: block;
 }
 
+/* smooth auto-scrolling carousel (Best Deals) — two identical halves loop
+   seamlessly by translating one full set width; pauses on hover */
+@keyframes qadam-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: qadam-marquee 40s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* order-status colours in the account data tables */
+.greenColor {
+  color: #2e7d32;
+  font-weight: 600;
+}
+.redColor {
+  color: #b5462b;
+  font-weight: 600;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

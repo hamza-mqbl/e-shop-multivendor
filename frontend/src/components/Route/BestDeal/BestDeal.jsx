@@ -17,8 +17,19 @@ const BestDeal = () => {
       <div className={`${styles.heading}`}>
         <h1>Best Deals</h1>
       </div>
-      <div className="grid grid-cols-1 gap-[5px] md:grid-cols-2 md:gap-[10px] lg:grid-cols-4 lg:gap-[20px] xl:grid-cols-5 xl:gap-[30px]">
-        {data && data.map((i, index) => <ProductCard data={i} key={index} />)}
+      <div className="relative overflow-hidden">
+        {/* edge fades */}
+        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-bone to-transparent z-10" />
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-bone to-transparent z-10" />
+        {data && data.length > 0 && (
+          <div className="marquee-track gap-5 py-2">
+            {[...data, ...data].map((i, index) => (
+              <div className="w-[230px] shrink-0" key={index}>
+                <ProductCard data={i} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

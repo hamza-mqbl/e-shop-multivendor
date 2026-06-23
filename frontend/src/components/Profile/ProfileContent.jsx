@@ -76,10 +76,10 @@ const ProfileContent = ({ active }) => {
             <div className="relative">
               <img
                 src={`${user?.avatar?.url}`}
-                className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
+                className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-marigold"
                 alt=""
               />
-              <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
+              <div className="w-[34px] h-[34px] bg-sand hover:bg-marigold transition-colors rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
                 <input
                   type="file"
                   id="image"
@@ -144,7 +144,7 @@ const ProfileContent = ({ active }) => {
               </div>
 
               <input
-                className={`w-[250px] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
+                className="w-[250px] h-[46px] bg-espresso hover:bg-coffee text-bone font-display font-medium text-center rounded-xl mt-8 cursor-pointer transition-colors"
                 required
                 value="Update"
                 type="submit"
@@ -268,7 +268,7 @@ const AllOrders = () => {
     });
 
   return (
-    <div className="pl-8 pt-1">
+    <div className="w-full overflow-x-auto">
       <DataGrid
         rows={row}
         columns={columns}
@@ -356,7 +356,7 @@ const AllRefundsOrders = () => {
     });
 
   return (
-    <div className="pl-8 pt-1">
+    <div className="w-full overflow-x-auto">
       <DataGrid
         rows={row}
         columns={columns}
@@ -442,7 +442,7 @@ const TrackOrder = () => {
     });
 
   return (
-    <div className="pl-8 pt-1">
+    <div className="w-full overflow-x-auto">
       <DataGrid
         rows={row}
         columns={columns}
@@ -475,7 +475,7 @@ const ChangPassword = () => {
   };
   return (
     <div className="w-full px-5">
-      <h1 className="text-[25px] block text-center font-[600] text-[#000000ba]">
+      <h1 className="text-[24px] block text-center font-display font-semibold text-espresso">
         Change Password
       </h1>
       <div className="w-full">
@@ -514,7 +514,7 @@ const ChangPassword = () => {
               className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
             />
             <input
-              className={`w-[95%] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
+              className="w-[95%] h-[46px] bg-espresso hover:bg-coffee text-bone font-display font-medium text-center rounded-xl mt-8 cursor-pointer transition-colors"
               required
               value="Update"
               type="submit"
@@ -710,7 +710,7 @@ const Address = () => {
         </div>
       )}
       <div className="flex w-full items-center justify-between">
-        <h1 className="text-[25px] font-[600] text-[#000000ba]">My Address</h1>
+        <h1 className="text-[24px] font-display font-semibold text-espresso">My Address</h1>
         <div
           className={`${styles.button} !rounded-md`}
           onClick={() => setOpen(true)}
@@ -722,7 +722,7 @@ const Address = () => {
       {user &&
         user.addresses.map((item, index) => (
           <div
-            className="w-full bg-white h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10"
+            className="w-full bg-white h-[70px] rounded-xl border border-sand flex items-center px-3 justify-between pr-10 mb-3"
             key={index}
           >
             <div className="flex items-center ">
