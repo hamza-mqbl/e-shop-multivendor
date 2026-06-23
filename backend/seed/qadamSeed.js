@@ -99,7 +99,7 @@ const buildProducts = (shop) => {
       description: desc("Classic Peshawari-style khussa with hand stitching.", "perfect for Eid, weddings and festive wear."),
       originalPrice: 3999, discountPrice: 2999, stock: 45,
       gender: "Men", material: "Genuine Leather", colors: ["Mustard", "Maroon"], sizes: MEN,
-      images: [img("1542838132-92c53300491e"), img("1449505278894-297fdb3edbc1")],
+      images: [img("1603487742131-4160ec999306"), img("1449505278894-297fdb3edbc1")],
       ratings: 4.8, sold_out: 64,
     },
     {
@@ -110,7 +110,7 @@ const buildProducts = (shop) => {
       description: desc("Elegant block heels that stay comfortable.", "with a padded sole and secure ankle fit."),
       originalPrice: 5500, discountPrice: 3999, stock: 38,
       gender: "Women", material: "Faux Suede", colors: ["Nude", "Black"], sizes: WOMEN,
-      images: [img("1543163521-1bf539c55dd2"), img("1562183241-b937e95585b6")],
+      images: [img("1596703263926-eb0762ee17e4"), img("1543163521-1bf539c55dd2")],
       ratings: 4.4, sold_out: 41,
     },
     {
@@ -121,7 +121,7 @@ const buildProducts = (shop) => {
       description: desc("Soft ballerina flats for work and everyday wear.", "with a slip-resistant sole and roomy toe."),
       originalPrice: 3200, discountPrice: 2299, stock: 65,
       gender: "Women", material: "Faux Leather", colors: ["Beige", "Black"], sizes: WOMEN,
-      images: [img("1596703263926-eb0762ee17e4"), img("1562183241-b937e95585b6")],
+      images: [img("1514989940723-e8e51635b782"), img("1562183241-b937e95585b6")],
       ratings: 4.2, sold_out: 73,
     },
     {
