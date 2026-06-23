@@ -16,13 +16,26 @@ import Rating from "./Rating";
 import { getAllProductsShop } from "../../redux/actions/product";
 import axios from "axios";
 
+// Small presentational helpers used in the buy box
+const MetaChip = ({ label, value }) => (
+  <span className="font-mono text-[12px] text-espresso bg-bone border border-sand rounded-full px-3 py-1">
+    <span className="text-clay">{label}:</span> {value}
+  </span>
+);
+
+const TrustBadge = ({ title, sub }) => (
+  <div className="bg-bone border border-sand rounded-lg py-2 px-2">
+    <p className="text-[12px] font-medium text-espresso leading-tight">{title}</p>
+    <p className="text-[10px] text-clay leading-tight">{sub}</p>
+  </div>
+);
+
 const ProductDetails = ({ data }) => {
   const navigate = useNavigate();
   const { wishlist } = useSelector((state) => state.wishlist);
   const { user, isAuthenticated } = useSelector((state) => state.user);
   const { cart } = useSelector((state) => state.cart);
   const { products } = useSelector((state) => state.products);
-  console.log("🚀 ~ ProductDetails ~ products:", products);
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
@@ -85,7 +98,6 @@ const ProductDetails = ({ data }) => {
     dispatch(WishlistActions.addToWishList(data));
   };
 
-  // console.log(data);
   const addToCartHandler = (id) => {
     const isItemExists = cart && cart.find((i) => i._id === id);
     const hasSizes = data.sizes && data.sizes.length > 0;
@@ -117,175 +129,260 @@ const ProductDetails = ({ data }) => {
 
   // Check if the average rating is an integer
   const averageRating = Number.isInteger(avg) ? avg.toFixed(0) : avg.toFixed(2);
+
+  const discountPercent =
+    data && data.originalPrice && data.originalPrice > data.discountPrice
+      ? Math.round((1 - data.discountPrice / data.originalPrice) * 100)
+      : 0;
+
   return (
-    <div className="bg-white">
+    <div className="bg-bone">
       {data ? (
-        <div className={`${styles.section} w-[90%] 800px:w-[80%] `}>
-          <div className="w-full py-5">
-            <div className="block w-full 800px:flex">
-              <div className="w-full 800px:w-[50%]">
-                <img src={data.images[select].url} className="w-[80%]" alt="" />
-                <div className="w-full flex">
-                  {data &&
-                    data.images.map((i, index) => (
-                      <div
-                        className={`${
-                          select === 0 ? "border" : "null"
-                        } cursor-pointer`}
+        <div className={`${styles.section} w-[90%] 800px:w-[80%]`}>
+          {/* breadcrumb */}
+          <nav className="flex items-center gap-2 text-[13px] text-clay py-5">
+            <Link to="/" className="hover:text-espresso">
+              Home
+            </Link>
+            <span>/</span>
+            <Link
+              to={`/products?category=${data.category}`}
+              className="hover:text-espresso"
+            >
+              {data.category}
+            </Link>
+            <span>/</span>
+            <span className="text-espresso truncate max-w-[220px]">
+              {data.name}
+            </span>
+          </nav>
+
+          <div className="block w-full 800px:flex 800px:gap-10 pb-12">
+            {/* ── gallery ── */}
+            <div className="w-full 800px:w-[48%]">
+              <div className="800px:sticky 800px:top-24">
+                <div className="relative w-full aspect-square bg-white border border-sand rounded-2xl overflow-hidden">
+                  <img
+                    src={data.images[select]?.url}
+                    className="w-full h-full object-cover"
+                    alt={data.name}
+                  />
+                  {discountPercent > 0 && (
+                    <span className="absolute top-4 left-4 bg-brick text-white font-mono font-semibold text-[13px] px-2.5 py-1 rounded-md">
+                      -{discountPercent}%
+                    </span>
+                  )}
+                </div>
+                {data.images.length > 1 && (
+                  <div className="flex gap-3 mt-4">
+                    {data.images.map((img, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => setSelect(index)}
+                        className={`w-[78px] h-[78px] rounded-xl overflow-hidden border-2 transition-colors ${
+                          select === index
+                            ? "border-marigold"
+                            : "border-sand hover:border-clay"
+                        }`}
                       >
                         <img
-                          src={`${i.url}`}
+                          src={img.url}
+                          className="w-full h-full object-cover"
                           alt=""
-                          className="h-[200px] overflow-hidden mr-3 mt-3"
-                          onClick={() => setSelect(index)}
                         />
-                      </div>
+                      </button>
                     ))}
-                  <div
-                    className={`${
-                      select === 1 ? "border" : "null"
-                    } cursor-pointer`}
-                  ></div>
-                </div>
+                  </div>
+                )}
               </div>
-              <div className="w-full 800px:w-[50%] pt-5">
-                <h1 className={`${styles.productTitle}`}>{data.name}</h1>
-                <p>{data.description}</p>
-                <div className="flex pt-3">
-                  <h4 className={`${styles.productDiscountPrice}`}>
-                    Rs {data.discountPrice}
-                  </h4>
-                  <h3 className={`${styles.price}`}>
-                    {data.originalPrice ? "Rs " + data.originalPrice : null}
-                  </h3>
+            </div>
+
+            {/* ── buy box ── */}
+            <div className="w-full 800px:w-[52%] pt-8 800px:pt-0">
+              <Link
+                to={`/shop/preview/${data.shop._id}`}
+                className="text-[14px] font-medium text-marigold-dark"
+              >
+                {data.shop.name}
+              </Link>
+              <h1 className="font-display text-[28px] 800px:text-[34px] font-semibold text-espresso leading-tight mt-1">
+                {data.name}
+              </h1>
+
+              <div className="flex items-center gap-3 mt-3">
+                <Rating ratings={data.ratings} />
+                <span className="text-[13px] text-clay">
+                  {data.sold_out} sold
+                </span>
+              </div>
+
+              {/* price */}
+              <div className="flex items-baseline flex-wrap gap-x-3 gap-y-1 mt-5">
+                <span className="font-mono font-semibold text-[30px] text-espresso">
+                  Rs {data.discountPrice}
+                </span>
+                {data.originalPrice ? (
+                  <span className="font-mono text-[18px] text-clay line-through">
+                    Rs {data.originalPrice}
+                  </span>
+                ) : null}
+                {discountPercent > 0 && (
+                  <span className="text-[13px] font-medium text-brick">
+                    Save {discountPercent}%
+                  </span>
+                )}
+              </div>
+
+              <hr className="seam my-6" />
+
+              {/* meta chips */}
+              {(data.brand || data.gender || data.material) && (
+                <div className="flex flex-wrap gap-2 mb-5">
+                  {data.brand && <MetaChip label="Brand" value={data.brand} />}
+                  {data.gender && <MetaChip label="For" value={data.gender} />}
+                  {data.material && (
+                    <MetaChip label="Material" value={data.material} />
+                  )}
                 </div>
+              )}
 
-                {/* shoe meta */}
-                {(data.brand || data.gender || data.material) && (
-                  <div className="flex flex-wrap gap-x-5 gap-y-1 pt-3 text-[13px] text-clay font-mono">
-                    {data.brand && <span>Brand: {data.brand}</span>}
-                    {data.gender && <span>For: {data.gender}</span>}
-                    {data.material && <span>Material: {data.material}</span>}
-                  </div>
-                )}
-
-                {/* size selector */}
-                {data.sizes && data.sizes.length > 0 && (
-                  <div className="pt-5">
-                    <div className="flex items-center justify-between pr-3">
-                      <h4 className="font-display font-medium text-espresso">
-                        Select size{" "}
-                        <span className="font-sans text-[12px] text-clay">(UK)</span>
-                      </h4>
-                      <span className="text-[12px] text-marigold-dark">
-                        Size guide
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap gap-2 pt-2">
-                      {data.sizes.map((size) => (
-                        <button
-                          key={size}
-                          type="button"
-                          onClick={() => setSelectedSize(size)}
-                          className={`min-w-[44px] h-[44px] px-2 rounded-lg border font-mono text-[15px] transition-colors ${
-                            selectedSize === size
-                              ? "bg-espresso text-bone border-espresso"
-                              : "bg-white text-espresso border-sand hover:border-marigold"
-                          }`}
-                        >
-                          {size}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* colors */}
-                {data.colors && data.colors.length > 0 && (
-                  <div className="pt-4 text-[13px] text-clay">
-                    Colours:{" "}
-                    <span className="text-espresso">{data.colors.join(", ")}</span>
-                  </div>
-                )}
-
-                <div className="flex items-center mt-8 justify-between pr-3">
-                  <div>
-                    <button
-                      className="bg-marigold hover:bg-marigold-dark text-espresso font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
-                      onClick={decrementCount}
-                    >
-                      -
-                    </button>
-                    <span className="bg-gray-200 text-gray-800 font-medium px-4 py-[11px]">
-                      {count}
-                    </span>
-                    <button
-                      className="bg-marigold hover:bg-marigold-dark text-espresso font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
-                      onClick={incrementCount}
-                    >
-                      +
-                    </button>
-                  </div>
-                  <div>
-                    {click ? (
-                      <AiFillHeart
-                        size={30}
-                        className="cursor-pointer"
-                        onClick={() => removeFromWishlistHandler(data)}
-                        color={click ? "red" : "#333"}
-                        title="Remove from wishlist"
-                      />
-                    ) : (
-                      <AiOutlineHeart
-                        size={30}
-                        className="cursor-pointer"
-                        onClick={() => addToWishlistHandler(data)}
-                        title="Add to wishlist"
-                      />
-                    )}
-                  </div>
-                </div>
-                <div
-                  className={`${styles.button} mt-6 rounded h-11 flex items-center`}
-                  onClick={() => addToCartHandler(data._id)}
-                >
-                  <span className="text-white flex items-center">
-                    Add to cart <AiOutlineShoppingCart className="ml-1" />
+              {/* colours */}
+              {data.colors && data.colors.length > 0 && (
+                <div className="mb-5 text-[14px]">
+                  <span className="text-clay">Colours: </span>
+                  <span className="text-espresso font-medium">
+                    {data.colors.join(", ")}
                   </span>
                 </div>
-                <div className="flex items-center pt-8 ">
-                  <Link to={`/shop/preview/${data.shop._id}`} className="flex">
-                    <img
-                      src={`${data.shop.avatar && data.shop.avatar?.url}`}
-                      className="w-[50px] h-[50px] rounded-full mr-2"
-                      alt=""
-                    />
-                  </Link>
-                  <div className="pr-8">
-                    <Link
-                      to={`/shop/preview/${data.shop._id}`}
-                      className="flex"
+              )}
+
+              {/* size selector */}
+              {data.sizes && data.sizes.length > 0 && (
+                <div className="mb-6">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-display font-medium text-espresso">
+                      Select size{" "}
+                      <span className="font-sans text-[12px] text-clay">
+                        (UK)
+                      </span>
+                    </h4>
+                    <button
+                      type="button"
+                      className="text-[13px] text-marigold-dark hover:text-espresso transition-colors"
                     >
-                      <h3 className={`${styles.shop_name} pb-1 pt-1`}>
-                        {data.shop.name}
-                      </h3>
-                    </Link>
-                    <h5 className="pb-3 text-[15px]">
-                      ({averageRating}/5) Ratings
-                    </h5>
+                      Size guide
+                    </button>
                   </div>
-                  <div
-                    className={`${styles.button} bg-[#6443d1]`}
-                    onClick={handleMessageSubmit}
-                  >
-                    <span className="text-white flex items-center">
-                      Send Message <AiOutlineMessage className="ml-1" />
-                    </span>
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {data.sizes.map((size) => (
+                      <button
+                        key={size}
+                        type="button"
+                        onClick={() => setSelectedSize(size)}
+                        className={`min-w-[48px] h-[48px] px-2 rounded-lg border font-mono text-[15px] transition-colors ${
+                          selectedSize === size
+                            ? "bg-espresso text-bone border-espresso"
+                            : "bg-white text-espresso border-sand hover:border-marigold"
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
                   </div>
                 </div>
+              )}
+
+              {/* quantity */}
+              <div className="flex items-center gap-4 mb-4">
+                <div className="flex items-center border border-sand rounded-xl overflow-hidden bg-white">
+                  <button
+                    type="button"
+                    onClick={decrementCount}
+                    className="w-11 h-12 text-espresso text-[20px] hover:bg-bone transition-colors"
+                  >
+                    −
+                  </button>
+                  <span className="w-12 text-center font-mono text-espresso">
+                    {count}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={incrementCount}
+                    className="w-11 h-12 text-espresso text-[20px] hover:bg-bone transition-colors"
+                  >
+                    +
+                  </button>
+                </div>
+                <span className="text-[13px] text-clay">
+                  {data.stock > 0 ? `${data.stock} in stock` : "Out of stock"}
+                </span>
+              </div>
+
+              {/* actions */}
+              <div className="flex items-stretch gap-3">
+                <button
+                  type="button"
+                  onClick={() => addToCartHandler(data._id)}
+                  className="flex-1 h-[52px] bg-marigold hover:bg-marigold-dark text-espresso font-display font-medium rounded-xl flex items-center justify-center gap-2 transition-colors"
+                >
+                  Add to cart <AiOutlineShoppingCart size={20} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    click
+                      ? removeFromWishlistHandler(data)
+                      : addToWishlistHandler(data)
+                  }
+                  title={click ? "Remove from wishlist" : "Add to wishlist"}
+                  className="w-[52px] h-[52px] rounded-xl border border-sand flex items-center justify-center hover:border-marigold transition-colors"
+                >
+                  {click ? (
+                    <AiFillHeart size={22} color="#B5462B" />
+                  ) : (
+                    <AiOutlineHeart size={22} color="#241A14" />
+                  )}
+                </button>
+              </div>
+
+              {/* trust badges */}
+              <div className="grid grid-cols-3 gap-2 mt-6 text-center">
+                <TrustBadge title="Free delivery" sub="over Rs 5,000" />
+                <TrustBadge title="7-day exchange" sub="wrong size? swap" />
+                <TrustBadge title="Cash on delivery" sub="pay at door" />
+              </div>
+
+              {/* seller card */}
+              <div className="flex items-center gap-3 mt-6 p-4 bg-white border border-sand rounded-xl">
+                <Link to={`/shop/preview/${data.shop._id}`}>
+                  <img
+                    src={`${data.shop.avatar && data.shop.avatar?.url}`}
+                    className="w-[48px] h-[48px] rounded-full border-2 border-marigold object-cover"
+                    alt=""
+                  />
+                </Link>
+                <div className="flex-1">
+                  <Link to={`/shop/preview/${data.shop._id}`}>
+                    <h3 className="font-display font-medium text-espresso">
+                      {data.shop.name}
+                    </h3>
+                  </Link>
+                  <h5 className="text-[13px] text-clay">
+                    ({averageRating}/5) Ratings
+                  </h5>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleMessageSubmit}
+                  className="h-[42px] px-4 rounded-lg border border-espresso text-espresso hover:bg-espresso hover:text-bone transition-colors flex items-center gap-1 text-[14px]"
+                >
+                  Message <AiOutlineMessage size={18} />
+                </button>
               </div>
             </div>
           </div>
+
           <ProductDetailsInfo
             data={data}
             products={products}
@@ -294,7 +391,9 @@ const ProductDetails = ({ data }) => {
           />
         </div>
       ) : (
-        <h1>hi this is me</h1>
+        <div className="h-[40vh] flex items-center justify-center text-clay">
+          Loading product…
+        </div>
       )}
     </div>
   );
@@ -306,129 +405,112 @@ const ProductDetailsInfo = ({
   totalReviewsLength,
   averageRating,
 }) => {
-  console.log("🚀 ~ totalReviewsLength:", totalReviewsLength);
-  console.log("🚀 ~ products:", products);
   const [active, setActive] = useState(1);
-  // const { products } = useSelector((state) => state.products);
+
+  const Tab = ({ id, children }) => (
+    <div className="relative">
+      <h5
+        className={`px-1 leading-5 font-display font-semibold cursor-pointer text-[16px] 800px:text-[18px] transition-colors ${
+          active === id ? "text-espresso" : "text-clay hover:text-espresso"
+        }`}
+        onClick={() => setActive(id)}
+      >
+        {children}
+      </h5>
+      {active === id ? <div className={`${styles.active_indicator}`} /> : null}
+    </div>
+  );
+
   return (
-    <div className="bg-[#f5f6fb] px-3 800px:px-10 py-6 rounded">
-      <div className="w-full flex justify-between border-b pt-10 pb-2">
-        <div className="relative">
-          <h5
-            className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
-            onClick={() => setActive(1)}
-          >
-            Product Details
-          </h5>
-          {active === 1 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
-        </div>
-        <div className="relative">
-          <h5
-            className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
-            onClick={() => setActive(2)}
-          >
-            Product Reviews
-          </h5>
-          {active === 2 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
-        </div>
-        <div className="relative">
-          <h5
-            className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
-            onClick={() => setActive(3)}
-          >
-            Seller Information
-          </h5>
-          {active === 3 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
-        </div>
+    <div className="bg-white border border-sand rounded-2xl px-5 800px:px-10 py-6 mb-14">
+      <div className="w-full flex justify-between border-b border-sand pb-3">
+        <Tab id={1}>Product details</Tab>
+        <Tab id={2}>Reviews</Tab>
+        <Tab id={3}>Seller</Tab>
       </div>
+
       {active === 1 ? (
-        <>
-          <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
-            {data.description}
-          </p>
-        </>
+        <p className="py-5 text-[15px] leading-8 text-espresso/80 whitespace-pre-line">
+          {data.description}
+        </p>
       ) : null}
 
       {active === 2 ? (
-        <div className="w-full  min-h-[40vh] flex flex-col py-3 overflow-y-scroll items-center">
+        <div className="w-full min-h-[30vh] flex flex-col py-5 items-center">
           {data &&
             data.reviews.map((item, index) => (
-              <div className=" w-full flex my-2">
+              <div className="w-full flex my-3" key={index}>
                 <img
                   src={`${backend_url}/${item.user.avatar}`}
-                  className=" w-[50px] h-[50px] rounded-full"
+                  className="w-[50px] h-[50px] rounded-full object-cover"
                   alt=""
                 />
-                <div className=" pl-2">
-                  <div className=" w-full flex items-center">
-                    <h1 className=" font-[500] mr-3">{item.user.name}</h1>
+                <div className="pl-3">
+                  <div className="w-full flex items-center">
+                    <h1 className="font-[500] text-espresso mr-3">
+                      {item.user.name}
+                    </h1>
                     <Rating ratings={data?.ratings} />
                   </div>
-                  <p>{item.comment}</p>
+                  <p className="text-clay mt-1">{item.comment}</p>
                 </div>
               </div>
             ))}
           {data && data.reviews.length === 0 && (
-            <h5>No Reviews have found for this product</h5>
+            <h5 className="text-clay">No reviews yet for this product.</h5>
           )}
         </div>
       ) : null}
 
-      {active == 3 ? (
-        <div className="w-full block 800px:flex p-5 ">
+      {active === 3 ? (
+        <div className="w-full block 800px:flex p-2 800px:p-5 gap-8">
           <div className="w-full 800px:w-[50%]">
             <Link to={`/shop/preview/${data.shop._id}`}>
               <div className="flex items-center">
                 <img
                   src={`${data.shop.avatar && data.shop.avatar?.url}`}
-                  className="w-[50px] h-[50px] rounded-full"
+                  className="w-[50px] h-[50px] rounded-full border-2 border-marigold object-cover"
                   alt=""
                 />
                 <div className="pl-3">
-                  <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
-                  <h5 className="pb-2 text-[15px]">
+                  <h3 className="font-display font-medium text-espresso">
+                    {data.shop.name}
+                  </h3>
+                  <h5 className="text-[13px] text-clay">
                     ({averageRating}/5) Ratings
                   </h5>
                 </div>
               </div>
             </Link>
-            <p className="pt-2">{data.shop.description}</p>
+            <p className="pt-3 text-[15px] leading-7 text-espresso/80">
+              {data.shop.description}
+            </p>
           </div>
-          <div className="w-full 800px:[50%] mt-5 800px:mt-0 800px:flex flex-col items-end">
+          <div className="w-full 800px:w-[50%] mt-5 800px:mt-0 800px:flex flex-col items-end">
             <div className="text-left">
-              <h5 className="font-[600]">
-                Joined on :{" "}
-                <span className="font-[500]">
+              <h5 className="font-[600] text-espresso">
+                Joined on:{" "}
+                <span className="font-[400] text-clay">
                   {data?.createdAt?.slice(0, 10)}
                 </span>
               </h5>
-              <h5 className="font-[600] pt-3">
-                Total Products :{" "}
-                <span className="font-[500]">
+              <h5 className="font-[600] text-espresso pt-3">
+                Total products:{" "}
+                <span className="font-[400] text-clay">
                   {products && products.length}
                 </span>
               </h5>
-              <h5 className="font-[600] pt-3">
-                Total Reviews :{" "}
-                <span className="font-[500]">{totalReviewsLength}</span>
+              <h5 className="font-[600] text-espresso pt-3">
+                Total reviews:{" "}
+                <span className="font-[400] text-clay">
+                  {totalReviewsLength}
+                </span>
               </h5>
-              <Link to="/">
-                <div
-                  className={`${styles.button} rounded-[4px] h-[39.5px] mt-3`}
-                >
-                  <h4 className="text-white"> Visit Shop</h4>
+              <Link to={`/shop/preview/${data.shop._id}`}>
+                <div className="inline-flex items-center justify-center h-[44px] px-6 mt-4 rounded-xl bg-espresso hover:bg-coffee transition-colors">
+                  <span className="text-bone font-display font-medium">
+                    Visit shop
+                  </span>
                 </div>
               </Link>
             </div>
