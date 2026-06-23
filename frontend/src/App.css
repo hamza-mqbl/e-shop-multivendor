@@ -2,24 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
-/* fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/* ── Qadam brand fonts ───────────────────────────────────────────────
+   Clash Display (display) from Fontshare · Inter + JetBrains Mono from Google */
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-*{
+* {
   scroll-behavior: smooth;
 }
+
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    background: #F6F6F5;
-    scroll-behavior: smooth;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: #FBF8F3; /* bone */
+  color: #241A14; /* espresso */
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
 }
-input,select{
+
+input,
+select {
   outline: none;
 }
-.batch_heart{
-  background: tomato;
+
+/* Visible keyboard focus everywhere — accessibility floor */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #F2A93B; /* marigold */
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Signature: the stitch-seam ──────────────────────────────────────
+   A dashed seam, pulled straight from a shoe's stitching, used as the
+   recurring divider/accent across the site. */
+.seam {
+  height: 0;
+  border: none;
+  border-top: 2px dashed rgba(140, 122, 107, 0.55); /* clay */
+}
+.seam-light {
+  border-top-color: rgba(231, 221, 206, 0.6); /* sand, for dark backgrounds */
+}
+
+/* Sole-tread texture for the footer / dark panels */
+.tread {
+  background-color: #241A14;
+  background-image: repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.035) 0px,
+      rgba(255, 255, 255, 0.035) 2px,
+      transparent 2px,
+      transparent 12px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.025) 0px,
+      rgba(255, 255, 255, 0.025) 2px,
+      transparent 2px,
+      transparent 12px
+    );
+}
+
+.batch_heart {
+  background: #B5462B; /* brick */
   width: 15px;
   height: 15px;
   display: flex;
@@ -31,6 +80,7 @@ input,select{
   top: -9%;
   cursor: pointer;
 }
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -41,4 +91,14 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

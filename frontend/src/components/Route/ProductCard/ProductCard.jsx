@@ -63,12 +63,12 @@ const ProductCard = ({ data,isEvent }) => {
   };
 
   return (
-    <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer ">
+    <div className="group w-full h-[370px] bg-white border border-sand rounded-xl shadow-card hover:shadow-cardHover hover:-translate-y-1 transition-all duration-200 p-3 relative cursor-pointer">
       <div className="flex justify-end"></div>
       <Link to={`${isEvent===true?`/product/${data._id}?isEvent=true`:`/product/${data._id}`}`}>
         <img
           src={`${data.images && data.images[0]?.url}`}
-          className="w-full h-[170px] object-contain "
+          className="w-full h-[170px] object-contain bg-bone rounded-lg"
           alt="sorry there is something"
         />
       </Link>
@@ -86,16 +86,16 @@ const ProductCard = ({ data,isEvent }) => {
         <div className="py-2 flex items-center justify-between">
           <div className="flex">
             <h5 className={`${styles.productDiscountPrice}`}>
+              Rs{" "}
               {data.originalPrice === 0
                 ? data.originalPrice
                 : data.discountPrice}
-              $
             </h5>
             <h4 className={`${styles.price}`}>
-              {data.originalPrice ? data.originalPrice + " $" : null}
+              {data.originalPrice ? "Rs " + data.originalPrice : null}
             </h4>
           </div>
-          <span className="font-[400] text-[17px] text-[#68d284]">
+          <span className="font-mono text-[13px] text-clay">
             {data?.sold_out} sold
           </span>
         </div>
@@ -130,7 +130,7 @@ const ProductCard = ({ data,isEvent }) => {
           size={25}
           className="absolute cursor-pointer right-2 top-24"
           onClick={() => addToCartHandler(data._id)}
-          color="#444"
+          color="#241A14"
           title="Add to cart"
         />
         {open ? <ProductDetailsCard setOpen={setOpen} data={data} /> : null}

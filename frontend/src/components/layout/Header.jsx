@@ -19,6 +19,18 @@ import DropDown from "./DropDown.jsx";
 import Navbar from "./Navbar.jsx";
 import { useSelector } from "react-redux";
 import { RxCross1 } from "react-icons/rx";
+import { FaShoePrints } from "react-icons/fa";
+
+// Qadam wordmark — reused in the top bar and mobile header
+const Wordmark = () => (
+  <span className="flex items-center gap-2 select-none">
+    <FaShoePrints className="text-marigold text-[22px] -rotate-12" />
+    <span className="font-display text-[26px] font-semibold tracking-tight text-espresso leading-none">
+      Qadam
+    </span>
+  </span>
+);
+
 const Header = ({ activeHeading }) => {
   const { allProducts } = useSelector((state) => state.products);
   const { cart } = useSelector((state) => state.cart);
@@ -60,10 +72,7 @@ const Header = ({ activeHeading }) => {
         <div className="hidden 800px:h-[50px] 800px:my-[20px] 800px:flex items-center justify-between">
           <div>
             <Link to="/">
-              <img
-                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-                alt="oho"
-              />
+              <Wordmark />
             </Link>
           </div>
           {/* search box */}
@@ -73,7 +82,7 @@ const Header = ({ activeHeading }) => {
               placeholder="Search Product..."
               value={searchTerm}
               onChange={handleSearchChange}
-              className="h-[40px] w-full px-2 border-[#3957db] border-[2px] rounded-md"
+              className="h-[44px] w-full px-3 bg-white border-2 border-sand focus:border-marigold rounded-lg transition-colors"
             />
             <AiOutlineSearch
               size={30}
@@ -121,7 +130,7 @@ const Header = ({ activeHeading }) => {
       <div
         className={`${
           active === true ? "shadow-sm fixed top-0 left-0 z-10" : null
-        } transition hidden 800px:flex items-center justify-between w-full bg-[#3321c8] h-[70px] `}
+        } transition hidden 800px:flex items-center justify-between w-full bg-espresso h-[70px] `}
       >
         <div
           className={`${styles.section} relative ${styles.noramlFlex} justify-between`}
@@ -162,7 +171,7 @@ const Header = ({ activeHeading }) => {
                 onClick={() => setOpenWishList(true)}
               >
                 <AiOutlineHeart size={30} color="rgb(255 255 255 / 83%)" />
-                <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
+                <span className="absolute right-0 top-0 rounded-full bg-brick w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
                   {wishlist && wishlist.length}
                 </span>
               </div>
@@ -177,7 +186,7 @@ const Header = ({ activeHeading }) => {
                   size={30}
                   color="rgb(255 255 255 / 83%)"
                 />
-                <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
+                <span className="absolute right-0 top-0 rounded-full bg-brick w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
                   {cart && cart.length}
                 </span>
               </div>
@@ -190,7 +199,7 @@ const Header = ({ activeHeading }) => {
                     <img
                       src={`${user.avatar?.url}`}
                       alt=""
-                      className="w-[40px] h-[40px] rounded-full border-[3px] border-[#0eae88]"
+                      className="w-[40px] h-[40px] rounded-full border-[3px] border-marigold"
                     />
                   </Link>
                 ) : (
@@ -228,12 +237,8 @@ const Header = ({ activeHeading }) => {
             />
           </div>
           <div>
-            <Link to="/">
-              <img
-                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-                alt=""
-                className="mt-3 cursor-pointer"
-              />
+            <Link to="/" className="mt-2 inline-block">
+              <Wordmark />
             </Link>
           </div>
           <div>
@@ -242,7 +247,7 @@ const Header = ({ activeHeading }) => {
               onClick={() => setOpenCart(true)}
             >
               <AiOutlineShoppingCart size={30} />
-              <span class="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
+              <span class="absolute right-0 top-0 rounded-full bg-brick w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
                 {cart && cart.length}
               </span>
             </div>
@@ -267,7 +272,7 @@ const Header = ({ activeHeading }) => {
                     onClick={() => setOpenWishList(true)}
                   >
                     <AiOutlineHeart size={30} className="mt-5 ml-3" />
-                    <span class="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
+                    <span class="absolute right-0 top-0 rounded-full bg-brick w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
                       {WishList && WishList.length}
                     </span>
                   </div>
@@ -283,7 +288,7 @@ const Header = ({ activeHeading }) => {
                 <input
                   type="search"
                   placeholder="Search Product..."
-                  className="h-[40px] w-full px-2 border-[#3957db] border-[2px] rounded-md"
+                  className="h-[44px] w-full px-3 bg-white border-2 border-sand focus:border-marigold rounded-lg transition-colors"
                   value={searchTerm}
                   onChange={handleSearchChange}
                 />
@@ -329,7 +334,7 @@ const Header = ({ activeHeading }) => {
                       <img
                         src={`${user.avatar?.url}`}
                         alt="sorry"
-                        className="w-[60px] h-[60px] rounded-full border-[3px] border-[#0eae88]"
+                        className="w-[60px] h-[60px] rounded-full border-[3px] border-marigold"
                       />
                     </Link>
                   </div>

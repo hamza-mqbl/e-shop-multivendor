@@ -54,6 +54,17 @@ router.post(
       productData.images = imageUrls; // Assign Cloudinary URLs to the product
       productData.shop = shop;
 
+      // Shoe attributes arrive as comma-separated strings from the form —
+      // normalise them into arrays for the schema.
+      ["sizes", "colors"].forEach((field) => {
+        if (typeof productData[field] === "string") {
+          productData[field] = productData[field]
+            .split(",")
+            .map((v) => v.trim())
+            .filter(Boolean);
+        }
+      });
+
       const product = await Product.create(productData);
 
       res.status(201).json({

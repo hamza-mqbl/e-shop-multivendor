@@ -26,6 +26,7 @@ const ProductDetails = ({ data }) => {
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
+  const [selectedSize, setSelectedSize] = useState(null);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -87,16 +88,17 @@ const ProductDetails = ({ data }) => {
   // console.log(data);
   const addToCartHandler = (id) => {
     const isItemExists = cart && cart.find((i) => i._id === id);
+    const hasSizes = data.sizes && data.sizes.length > 0;
     if (isItemExists) {
       toast.error("item already in cart");
+    } else if (hasSizes && !selectedSize) {
+      toast.error("Please select a size first");
+    } else if (data.stock < count) {
+      toast.error("product stock limited!");
     } else {
-      if (data.stock < count) {
-        toast.error("product stock limited!");
-      } else {
-        const cartData = { ...data, qty: count };
-        dispatch(addToCart(cartData));
-        toast.success("item added to cart successfully");
-      }
+      const cartData = { ...data, qty: count, selectedSize };
+      dispatch(addToCart(cartData));
+      toast.success("item added to cart successfully");
     }
   };
   const totalReviewsLength =
@@ -151,16 +153,65 @@ const ProductDetails = ({ data }) => {
                 <p>{data.description}</p>
                 <div className="flex pt-3">
                   <h4 className={`${styles.productDiscountPrice}`}>
-                    {data.discountPrice}$
+                    Rs {data.discountPrice}
                   </h4>
                   <h3 className={`${styles.price}`}>
-                    {data.originalPrice ? data.originalPrice + "$" : null}
+                    {data.originalPrice ? "Rs " + data.originalPrice : null}
                   </h3>
                 </div>
-                <div className="flex items-center mt-12 justify-between pr-3">
+
+                {/* shoe meta */}
+                {(data.brand || data.gender || data.material) && (
+                  <div className="flex flex-wrap gap-x-5 gap-y-1 pt-3 text-[13px] text-clay font-mono">
+                    {data.brand && <span>Brand: {data.brand}</span>}
+                    {data.gender && <span>For: {data.gender}</span>}
+                    {data.material && <span>Material: {data.material}</span>}
+                  </div>
+                )}
+
+                {/* size selector */}
+                {data.sizes && data.sizes.length > 0 && (
+                  <div className="pt-5">
+                    <div className="flex items-center justify-between pr-3">
+                      <h4 className="font-display font-medium text-espresso">
+                        Select size{" "}
+                        <span className="font-sans text-[12px] text-clay">(UK)</span>
+                      </h4>
+                      <span className="text-[12px] text-marigold-dark">
+                        Size guide
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {data.sizes.map((size) => (
+                        <button
+                          key={size}
+                          type="button"
+                          onClick={() => setSelectedSize(size)}
+                          className={`min-w-[44px] h-[44px] px-2 rounded-lg border font-mono text-[15px] transition-colors ${
+                            selectedSize === size
+                              ? "bg-espresso text-bone border-espresso"
+                              : "bg-white text-espresso border-sand hover:border-marigold"
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* colors */}
+                {data.colors && data.colors.length > 0 && (
+                  <div className="pt-4 text-[13px] text-clay">
+                    Colours:{" "}
+                    <span className="text-espresso">{data.colors.join(", ")}</span>
+                  </div>
+                )}
+
+                <div className="flex items-center mt-8 justify-between pr-3">
                   <div>
                     <button
-                      className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
+                      className="bg-marigold hover:bg-marigold-dark text-espresso font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
                       onClick={decrementCount}
                     >
                       -
@@ -169,7 +220,7 @@ const ProductDetails = ({ data }) => {
                       {count}
                     </span>
                     <button
-                      className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
+                      className="bg-marigold hover:bg-marigold-dark text-espresso font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
                       onClick={incrementCount}
                     >
                       +

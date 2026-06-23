@@ -16,6 +16,25 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, "please enter your product tags"],
   },
+  // ── Shoe-specific attributes ────────────────────────────────
+  brand: {
+    type: String,
+  },
+  gender: {
+    type: String, // "Men" | "Women" | "Kids" | "Unisex"
+    default: "Unisex",
+  },
+  material: {
+    type: String, // e.g. "Genuine Leather", "Suede", "Canvas"
+  },
+  sizes: {
+    type: [String], // available sizes, e.g. ["6","7","8","9","10"]
+    default: [],
+  },
+  colors: {
+    type: [String], // e.g. ["Black","Tan"]
+    default: [],
+  },
   originalPrice: {
     type: Number,
   },

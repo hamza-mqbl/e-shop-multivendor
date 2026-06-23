@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { FiPackage, FiShoppingBag } from "react-icons/fi";
 import { BiMessageSquareDetail } from "react-icons/bi";
+import { FaShoePrints } from "react-icons/fa";
 import { backend_url } from "../../../server";
 const DashboardHeader = () => {
   const { seller } = useSelector((state) => state.seller);
@@ -15,11 +16,14 @@ const DashboardHeader = () => {
   return (
     <div className="w-full h-[80px] bg-white shadow sticky top-0 left-0 z-30 flex items-center justify-between px-4">
       <div>
-        <Link to="/dashboard">
-          <img
-            src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-            alt=""
-          />
+        <Link to="/dashboard" className="flex items-center gap-2">
+          <FaShoePrints className="text-marigold text-[22px] -rotate-12" />
+          <span className="font-display text-[24px] font-semibold text-espresso leading-none">
+            Qadam
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-clay border border-sand rounded px-1.5 py-0.5">
+            Seller
+          </span>
         </Link>
       </div>
       <div className="flex items-center">
@@ -59,7 +63,7 @@ const DashboardHeader = () => {
             <img
               src={`${seller?.avatar?.url}`}
               alt=""
-              className="w-[50px] h-[50px] rounded-full object-cover"
+              className="w-[50px] h-[50px] rounded-full object-cover border-2 border-marigold"
             />
           </Link>
         </div>

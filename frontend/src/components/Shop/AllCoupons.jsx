@@ -167,7 +167,7 @@ const AllCoupons = () => {
                   name="name"
                   required
                   value={name}
-                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Enter your coupon code name..."
                 />
@@ -182,7 +182,7 @@ const AllCoupons = () => {
                   name="value"
                   value={value}
                   required
-                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                   onChange={(e) => setValue(e.target.value)}
                   placeholder="Enter your coupon code value..."
                 />
@@ -194,7 +194,7 @@ const AllCoupons = () => {
                   type="number"
                   name="value"
                   value={minAmount}
-                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                   onChange={(e) => setMinAmount(e.target.value)}
                   placeholder="Enter your coupon code min amount..."
                 />
@@ -206,7 +206,7 @@ const AllCoupons = () => {
                   type="number"
                   name="value"
                   value={maxAmount}
-                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                   onChange={(e) => setMaxAmount(e.target.value)}
                   placeholder="Enter your coupon code max amount..."
                 />
@@ -235,7 +235,7 @@ const AllCoupons = () => {
                 <input
                   type="submit"
                   value="Create"
-                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                 />
               </div>
             </form>

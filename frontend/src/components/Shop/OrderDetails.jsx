@@ -59,12 +59,12 @@ const OrderDetails = () => {
     <div className={` py-4 min-h-screen ${styles.section} mb-16`}>
       <div className=" w-full flex items-center justify-between">
         <div className=" flex items-center">
-          <BsFillBagFill size={30} color="crimson" />
+          <BsFillBagFill size={30} color="#B5462B" />
           <h1 className=" pl-2 text-[25px]">Order Details</h1>
         </div>
         <Link to="dashboard-orders">
           <div
-            className={`${styles.button} !bg-[#fce1e6] !roudnded-[4px] text-[#e94560] font-[600] !h-[45px] !text-[18px]`}
+            className={`${styles.button} !bg-sand !roudnded-[4px] text-espresso font-[600] !h-[45px] !text-[18px]`}
           >
             orderList
           </div>
@@ -92,7 +92,7 @@ const OrderDetails = () => {
             <div className=" w-full">
               <h5 className=" pl-3 text-[20px]">{item.name}</h5>
               <h5 className=" pl-3 text-[20px] text-[#00000091]">
-                US${item.discountPrice}×{item.qty}
+                Rs {item.discountPrice}×{item.qty}
               </h5>
             </div>
           </div>
@@ -102,7 +102,7 @@ const OrderDetails = () => {
         {" "}
         {/* //use text alig property to show text in the right side */}
         <h1 className=" pt-3 text-[18px]">
-          Total Price: <strong>US${data?.totalPrice}</strong>
+          Total Price: <strong>Rs {data?.totalPrice}</strong>
         </h1>
       </div>
       {/* next */}
@@ -185,7 +185,7 @@ const OrderDetails = () => {
         ) : null
       }
       <div
-        className={`${styles.button} !bg-[#fce1e6] !roudnded-[4px] text-[#e94560] font-[600] !h-[45px] !text-[18px]`}
+        className={`${styles.button} !bg-sand !roudnded-[4px] text-espresso font-[600] !h-[45px] !text-[18px]`}
         onClick={orderUpdateHandler}
       >
         Update Status

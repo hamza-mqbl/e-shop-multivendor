@@ -20,6 +20,11 @@ const CreateProduct = () => {
   const [originalPrice, setOriginalPrice] = useState();
   const [discountPrice, setDiscountPrice] = useState();
   const [stock, setStock] = useState();
+  const [brand, setBrand] = useState("");
+  const [gender, setGender] = useState("Unisex");
+  const [material, setMaterial] = useState("");
+  const [sizes, setSizes] = useState("");
+  const [colors, setColors] = useState("");
 
   useEffect(() => {
     if (error) {
@@ -51,6 +56,11 @@ const CreateProduct = () => {
     newForm.append("originalPrice", originalPrice);
     newForm.append("discountPrice", discountPrice);
     newForm.append("stock", stock);
+    newForm.append("brand", brand);
+    newForm.append("gender", gender);
+    newForm.append("material", material);
+    newForm.append("sizes", sizes); // comma-separated; backend splits into an array
+    newForm.append("colors", colors);
     newForm.append("shopId", seller._id);
 
     // Append images in the loop
@@ -75,7 +85,7 @@ const CreateProduct = () => {
             type="text"
             name="name"
             value={name}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter your product name..."
           />
@@ -92,7 +102,7 @@ const CreateProduct = () => {
             type="text"
             name="description"
             value={description}
-            className="mt-2 appearance-none block w-full pt-2 px-3 border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="mt-2 appearance-none block w-full pt-2 px-3 border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Enter your product description..."
           ></textarea>
@@ -125,9 +135,71 @@ const CreateProduct = () => {
             type="text"
             name="tags"
             value={tags}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setTags(e.target.value)}
             placeholder="Enter your product tags..."
+          />
+        </div>
+        <br />
+        <div>
+          <label className="pb-2">Brand</label>
+          <input
+            type="text"
+            name="brand"
+            value={brand}
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            onChange={(e) => setBrand(e.target.value)}
+            placeholder="e.g. Qadam"
+          />
+        </div>
+        <br />
+        <div>
+          <label className="pb-2">For</label>
+          <select
+            className="w-full mt-2 border h-[35px] rounded-[5px]"
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+          >
+            <option value="Unisex">Unisex</option>
+            <option value="Men">Men</option>
+            <option value="Women">Women</option>
+            <option value="Kids">Kids</option>
+          </select>
+        </div>
+        <br />
+        <div>
+          <label className="pb-2">Material</label>
+          <input
+            type="text"
+            name="material"
+            value={material}
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            onChange={(e) => setMaterial(e.target.value)}
+            placeholder="e.g. Genuine Leather"
+          />
+        </div>
+        <br />
+        <div>
+          <label className="pb-2">Available sizes (UK)</label>
+          <input
+            type="text"
+            name="sizes"
+            value={sizes}
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            onChange={(e) => setSizes(e.target.value)}
+            placeholder="Comma separated, e.g. 6,7,8,9,10"
+          />
+        </div>
+        <br />
+        <div>
+          <label className="pb-2">Colours</label>
+          <input
+            type="text"
+            name="colors"
+            value={colors}
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            onChange={(e) => setColors(e.target.value)}
+            placeholder="Comma separated, e.g. Black, Tan"
           />
         </div>
         <br />
@@ -137,7 +209,7 @@ const CreateProduct = () => {
             type="number"
             name="price"
             value={originalPrice}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setOriginalPrice(e.target.value)}
             placeholder="Enter your product price..."
           />
@@ -151,7 +223,7 @@ const CreateProduct = () => {
             type="number"
             name="price"
             value={discountPrice}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setDiscountPrice(e.target.value)}
             placeholder="Enter your product price with discount..."
           />
@@ -165,7 +237,7 @@ const CreateProduct = () => {
             type="number"
             name="price"
             value={stock}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setStock(e.target.value)}
             placeholder="Enter your product stock..."
           />
@@ -202,7 +274,7 @@ const CreateProduct = () => {
             <input
               type="submit"
               value="Create"
-              className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             />
           </div>
         </div>

@@ -5,6 +5,7 @@ import {
   AiFillYoutube,
   AiOutlineTwitter,
 } from "react-icons/ai";
+import { FaShoePrints } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import {
   footercompanyLinks,
@@ -14,59 +15,53 @@ import {
 
 const Footer = () => {
   return (
-    <div className="bg-[#000] text-white">
-      <div className="md:flex md:justify-between md:items-center sm:px-12 px-4 bg-[#342ac8] py-7">
-        <h1 className="lg:text-4xl text-3xl md:mb-0 mb-6 lg:leading-normal font-semibold md:w-2/5">
-          <span className="text-[#56d879]">Subscribe</span> us for get news{" "}
-          <br />
-          events and offers
+    <div className="tread text-bone">
+      {/* Newsletter band */}
+      <div className="md:flex md:justify-between md:items-center sm:px-12 px-4 bg-coffee py-8 border-b border-dashed border-white/10">
+        <h1 className="lg:text-3xl text-2xl md:mb-0 mb-6 lg:leading-snug font-display font-semibold md:w-2/5">
+          <span className="text-marigold">New drops & offers</span>, straight to
+          your inbox
         </h1>
-        <div>
+        <div className="flex flex-col sm:flex-row">
           <input
-            type="text"
+            type="email"
             required
             placeholder="Enter your email..."
-            className="text-gray-800
-                sm:w-72 w-full sm:mr-5 mr-1 lg:mb-0 mb-4 py-2.5 rounded px-2 focus:outline-none"
+            className="text-espresso bg-bone sm:w-72 w-full sm:mr-3 mb-3 sm:mb-0 py-2.5 rounded-lg px-3 focus:outline-none"
           />
-          <button className="bg-[#56d879] hover:bg-teal-500 duration-300 px-5 py-2.5 rounded-md text-whie md:w-auto w-full">
-            Submit
+          <button className="bg-marigold hover:bg-marigold-dark text-espresso font-display font-medium duration-300 px-6 py-2.5 rounded-lg md:w-auto w-full">
+            Subscribe
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:gird-cols-3 lg:grid-cols-4 gap-6 sm:px-8 px-5 py-16 sm:text-center">
+
+      {/* Link columns */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-8 sm:px-8 px-5 py-16 sm:text-center">
         <ul className="px-5 text-center sm:text-start flex sm:block flex-col items-center">
-          <img
-            src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-            alt=""
-            style={{ filter: "brightness(0) invert(1)" }}
-          />
-          <br />
-          <p>The home and elements needeed to create beatiful products.</p>
-          <div className="flex items-center mt-[15px]">
-            <AiFillFacebook size={25} className="cursor-pointer" />
-            <AiOutlineTwitter
-              size={25}
-              style={{ marginLeft: "15px", cursor: "pointer" }}
-            />
-            <AiFillInstagram
-              size={25}
-              style={{ marginLeft: "15px", cursor: "pointer" }}
-            />
-            <AiFillYoutube
-              size={25}
-              style={{ marginLeft: "15px", cursor: "pointer" }}
-            />
+          <span className="flex items-center gap-2">
+            <FaShoePrints className="text-marigold text-[22px] -rotate-12" />
+            <span className="font-display text-[26px] font-semibold text-bone">
+              Qadam
+            </span>
+          </span>
+          <p className="mt-4 text-sand/80 text-sm leading-6 max-w-[240px]">
+            Shoes for every step you take — chappals, sandals, formal and
+            sneakers for the whole family.
+          </p>
+          <div className="flex items-center mt-5 gap-4">
+            <AiFillFacebook size={24} className="cursor-pointer hover:text-marigold transition-colors" />
+            <AiOutlineTwitter size={24} className="cursor-pointer hover:text-marigold transition-colors" />
+            <AiFillInstagram size={24} className="cursor-pointer hover:text-marigold transition-colors" />
+            <AiFillYoutube size={24} className="cursor-pointer hover:text-marigold transition-colors" />
           </div>
         </ul>
 
         <ul className="text-center sm:text-start">
-          <h1 className="mb-1 font-semibold">Company</h1>
-          {footerProductLinks.map((link,index) => (
+          <h1 className="mb-3 font-display font-semibold text-bone">Company</h1>
+          {footerProductLinks.map((link, index) => (
             <li key={index}>
               <Link
-                className="text-gray-400 hover:text-teal-400 duration-300
-                   text-sm cursor-pointer leading-6"
+                className="text-sand/80 hover:text-marigold duration-300 text-sm cursor-pointer leading-7"
                 to={link.link}
               >
                 {link.name}
@@ -76,12 +71,11 @@ const Footer = () => {
         </ul>
 
         <ul className="text-center sm:text-start">
-          <h1 className="mb-1 font-semibold">Shop</h1>
-          {footercompanyLinks.map((link,index) => (
+          <h1 className="mb-3 font-display font-semibold text-bone">Shop</h1>
+          {footercompanyLinks.map((link, index) => (
             <li key={index}>
               <Link
-                className="text-gray-400 hover:text-teal-400 duration-300
-                   text-sm cursor-pointer leading-6"
+                className="text-sand/80 hover:text-marigold duration-300 text-sm cursor-pointer leading-7"
                 to={link.link}
               >
                 {link.name}
@@ -91,12 +85,11 @@ const Footer = () => {
         </ul>
 
         <ul className="text-center sm:text-start">
-          <h1 className="mb-1 font-semibold">Support</h1>
-          {footerSupportLinks.map((link,index) => (
+          <h1 className="mb-3 font-display font-semibold text-bone">Support</h1>
+          {footerSupportLinks.map((link, index) => (
             <li key={index}>
               <Link
-                className="text-gray-400 hover:text-teal-400 duration-300
-                   text-sm cursor-pointer leading-6"
+                className="text-sand/80 hover:text-marigold duration-300 text-sm cursor-pointer leading-7"
                 to={link.link}
               >
                 {link.name}
@@ -106,16 +99,14 @@ const Footer = () => {
         </ul>
       </div>
 
-      <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10
-         text-center pt-2 text-gray-400 text-sm pb-8"
-      >
-        <span>© 2020 Becodemy. All rights reserved.</span>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-center pt-2 text-sand/70 text-sm pb-8 px-5 items-center">
+        <span>© {new Date().getFullYear()} Qadam. All rights reserved.</span>
         <span>Terms · Privacy Policy</span>
         <div className="sm:block flex items-center justify-center w-full">
           <img
             src="https://hamart-shop.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ffooter-payment.a37c49ac.png&w=640&q=75"
-            alt=""
+            alt="Accepted payment methods"
+            className="opacity-80"
           />
         </div>
       </div>
@@ -124,4 +115,3 @@ const Footer = () => {
 };
 
 export default Footer;
-  

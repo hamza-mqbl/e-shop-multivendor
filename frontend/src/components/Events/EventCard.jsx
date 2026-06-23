@@ -41,7 +41,7 @@ const EventCard = ({ active, data }) => {
         <p>{data.description}</p>
         <div className="flex py-2 justify-between">
           <div className="flex">
-            <h5 className="font-[500] text-[18px] text-[#d55b45] pr-3 line-through">
+            <h5 className="font-mono font-[500] text-[18px] text-clay pr-3 line-through">
               {data.originalPrice}
             </h5>
             <h5 className="font-bold text-[20px] text-[#333] font-Roboto">

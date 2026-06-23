@@ -291,7 +291,7 @@ const WithdrawMoney = () => {
                       </div>
                     </div>
                     <br />
-                    <h4>Available Balance: {availableBalance}$</h4>
+                    <h4>Available Balance: Rs {availableBalance}</h4>
                     <br />
                     <div className="800px:flex w-full items-center">
                       <input
