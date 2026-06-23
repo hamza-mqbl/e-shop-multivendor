@@ -31,6 +31,7 @@ import {
   UserInbox,
 } from "./routes/Routes.js";
 import ProtectedRoute from "./routes/ProtectedRoute.js";
+import ScrollToTop from "./components/Route/ScrollToTop.jsx";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { server } from "./server.js";
@@ -87,6 +88,7 @@ function App() {
         <Loader />
       ) : (
         <BrowserRouter>
+          <ScrollToTop />
           {stripeApiKey && (
             <Elements stripe={loadStripe(stripeApiKey)}>
               <Routes>

@@ -18,6 +18,7 @@ const mongoose = require("mongoose");
 const User = require("../model/user");
 const Shop = require("../model/shop");
 const Product = require("../model/product");
+const Event = require("../model/event");
 
 const img = (id) => ({ url: `https://images.unsplash.com/photo-${id}?w=900&q=80&auto=format&fit=crop` });
 const avatar = (name, bg = "241A14") => ({
@@ -200,9 +201,31 @@ const buildProducts = (shop) => {
     // 3) Products
     const products = await Product.insertMany(buildProducts(shop));
 
+    // 4) One running offer (Event)
+    const now = new Date();
+    const finish = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // +14 days
+    const event = await Event.create({
+      name: "Eid Flash Sale — Street Runner Sneakers",
+      description:
+        "Limited-time Eid offer on our best-selling Street Runner sneakers. Lightweight, breathable and built for the city — now at the lowest price of the season. While stocks last.",
+      category: "Sneakers",
+      start_Date: now,
+      Finish_Date: finish,
+      status: "Running",
+      tags: "sneakers, sale, eid, offer, limited",
+      originalPrice: 7999,
+      discountPrice: 3999,
+      stock: 40,
+      sold_out: 27,
+      images: [img("1549298916-b41d501d3772"), img("1600185365926-3a2ce3cdb9eb")],
+      shopId: shop._id.toString(),
+      shop,
+    });
+
     console.log("\n✅ Seed complete.");
     console.log(`   DB:        ${dbName}`);
     console.log(`   Products:  ${products.length}`);
+    console.log(`   Offers:    1 (${event.name})`);
     console.log("\n──────── Login credentials ────────");
     console.log("  Customer (storefront /login):");
     console.log("     email:    customer@qadam.pk");

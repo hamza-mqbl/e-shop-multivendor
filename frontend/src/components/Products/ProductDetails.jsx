@@ -15,6 +15,11 @@ import { backend_url, server } from "../../server";
 import Rating from "./Rating";
 import { getAllProductsShop } from "../../redux/actions/product";
 import axios from "axios";
+import InnerImageZoom from "react-inner-image-zoom";
+import "react-inner-image-zoom/lib/styles.min.css";
+
+// Request a higher-resolution Unsplash variant for the zoom overlay
+const hiRes = (url) => (url ? url.replace(/w=\d+/, "w=1600") : url);
 
 // Small presentational helpers used in the buy box
 const MetaChip = ({ label, value }) => (
@@ -162,10 +167,15 @@ const ProductDetails = ({ data }) => {
             <div className="w-full 800px:w-[48%]">
               <div>
                 <div className="relative w-full aspect-square bg-white border border-sand rounded-2xl overflow-hidden">
-                  <img
+                  <InnerImageZoom
+                    key={select}
                     src={data.images[select]?.url}
-                    className="w-full h-full object-cover"
-                    alt={data.name}
+                    zoomSrc={hiRes(data.images[select]?.url)}
+                    zoomType="hover"
+                    hideHint
+                    fullscreenOnMobile
+                    className="iiz-frame"
+                    imgAttributes={{ alt: data.name }}
                   />
                   {discountPercent > 0 && (
                     <span className="absolute top-4 left-4 bg-brick text-white font-mono font-semibold text-[13px] px-2.5 py-1 rounded-md">

@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "../../styles/styles";
 import CountDown from "./CountDown.jsx";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -26,52 +25,85 @@ const EventCard = ({ active, data }) => {
       }
     }
   };
+  const discountPercent =
+    data && data.originalPrice && data.originalPrice > data.discountPrice
+      ? Math.round((1 - data.discountPrice / data.originalPrice) * 100)
+      : 0;
+
   // Check if data is defined
   return data ? (
     <div
-      className={`w-full block bg-white rounded-lg ${
+      className={`w-full block bg-white border border-sand rounded-2xl shadow-card overflow-hidden ${
         active ? "unset" : "mb-12"
-      } lg:flex p-2`}
+      } lg:flex`}
     >
-      <div className="w-full lg:w-[50%] m-auto">
-        <img src={`${data.images && data.images[0]?.url}`} alt="" />
+      <div className="relative w-full lg:w-[48%]">
+        <div className="aspect-[4/3] lg:aspect-auto lg:h-full bg-bone">
+          <img
+            src={`${data.images && data.images[0]?.url}`}
+            alt={data.name}
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <span className="absolute top-4 left-4 bg-brick text-white font-mono font-semibold text-[13px] px-2.5 py-1 rounded-md">
+          Offer
+        </span>
       </div>
-      <div className="w-full lg:w-[50%] flex flex-col justify-center">
-        <h2 className={`${styles.productTitle}`}>{data.name}</h2>
-        <p>{data.description}</p>
-        <div className="flex py-2 justify-between">
-          <div className="flex">
-            <h5 className="font-mono font-[500] text-[18px] text-clay pr-3 line-through">
-              {data.originalPrice}
-            </h5>
-            <h5 className="font-bold text-[20px] text-[#333] font-Roboto">
-              {data.discountPrice}
-            </h5>
+
+      <div className="w-full lg:w-[52%] flex flex-col justify-center p-6 800px:p-8">
+        <h2 className="font-display text-[24px] 800px:text-[28px] font-semibold text-espresso leading-tight">
+          {data.name}
+        </h2>
+        <p className="text-[14px] leading-relaxed text-clay mt-2 line-clamp-3">
+          {data.description}
+        </p>
+
+        <div className="flex items-end justify-between mt-4">
+          <div className="flex items-baseline gap-3">
+            <span className="font-mono font-semibold text-[26px] text-espresso">
+              Rs {data.discountPrice}
+            </span>
+            {data.originalPrice ? (
+              <span className="font-mono text-[16px] text-clay line-through">
+                Rs {data.originalPrice}
+              </span>
+            ) : null}
+            {discountPercent > 0 && (
+              <span className="text-[13px] font-medium text-brick">
+                Save {discountPercent}%
+              </span>
+            )}
           </div>
-          <span className="pr-3 font-[400] text-[17px] text-[#44a55e]">
+          <span className="font-mono text-[13px] text-clay">
             {data.sold_out} sold
           </span>
         </div>
-        <CountDown data={data} />
-        <br />
-        <div className="flex items-center">
+
+        <div className="mt-5">
+          <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-marigold-dark mb-2">
+            Ends in
+          </p>
+          <CountDown data={data} />
+        </div>
+
+        <div className="flex items-center gap-3 mt-6">
           <Link to={`/product/${data._id}?isEvent=true`}>
-            <div className={`${styles.button} text-[#fff]`}>See details</div>
-          </Link>
-          <Link>
-            <div
-              className={`${styles.button} text-[#fff] ml-5`}
-              onClick={() => addToCartHandler(data)}
-            >
-              Add to cart
+            <div className="inline-flex items-center justify-center h-[48px] px-6 rounded-xl border border-espresso text-espresso hover:bg-espresso hover:text-bone transition-colors font-display font-medium">
+              See details
             </div>
           </Link>
+          <div
+            className="inline-flex items-center justify-center h-[48px] px-6 rounded-xl bg-marigold hover:bg-marigold-dark text-espresso transition-colors font-display font-medium cursor-pointer"
+            onClick={() => addToCartHandler(data)}
+          >
+            Add to cart
+          </div>
         </div>
       </div>
     </div>
   ) : (
-    <div className="flex justify-center text-center text-[#5b5959] font-bold text-lg">
-      No Event is created yet!
+    <div className="flex justify-center text-center text-clay font-medium text-lg py-10">
+      No offers are running right now.
     </div>
   );
 };

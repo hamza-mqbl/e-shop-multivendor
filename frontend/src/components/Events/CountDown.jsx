@@ -28,28 +28,28 @@ const CountDown = ({ data }) => {
   }
 
   if (Object.keys(timeLeft).length === 0) {
-    return <span className="text-[red] text-[25px] ">Time's up!</span>;
+    return (
+      <span className="font-display text-[18px] text-brick">Offer ended</span>
+    );
   }
 
-  const timerComponents = Object.keys(timeLeft).map((interval) => {
-    if (!timeLeft[interval]) {
-      return null;
-    }
-
-    return (
-      <span className="text-[25px] text-[#475ad2]">
-        {timeLeft[interval]} {interval}{" "}
-      </span>
-    );
-  });
+  const intervals = ["days", "hours", "minutes", "seconds"];
 
   return (
-    <div>
-      {timerComponents.length ? (
-        timerComponents
-      ) : (
-        <span className="text-[red] text-[25px]">Time's Up</span>
-      )}
+    <div className="flex gap-2">
+      {intervals.map((interval) => (
+        <div
+          key={interval}
+          className="flex flex-col items-center bg-bone border border-sand rounded-lg px-3 py-1.5 min-w-[56px]"
+        >
+          <span className="font-mono font-semibold text-espresso text-[20px] leading-none">
+            {String(timeLeft[interval] ?? 0).padStart(2, "0")}
+          </span>
+          <span className="text-[10px] uppercase tracking-wide text-clay mt-1">
+            {interval}
+          </span>
+        </div>
+      ))}
     </div>
   );
 };

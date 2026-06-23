@@ -1,37 +1,55 @@
-// import { set } from "mongoose";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "../../styles/styles";
+import {
+  GiLeatherBoot,
+  GiConverseShoe,
+  GiRunningShoe,
+  GiSandal,
+  GiFlipFlops,
+  GiSlippers,
+  GiHighHeel,
+  GiBallerinaShoes,
+} from "react-icons/gi";
+import { FaChild, FaRunning } from "react-icons/fa";
+
+// Same footwear icons as the homepage category grid, keyed by title
+const categoryIcons = {
+  "Men's Formal": GiLeatherBoot,
+  "Men's Casual": GiConverseShoe,
+  Sneakers: GiRunningShoe,
+  "Sandals & Slides": GiSandal,
+  Chappals: GiFlipFlops,
+  "Peshawari & Khussa": GiSlippers,
+  "Women's Heels": GiHighHeel,
+  "Women's Flats": GiBallerinaShoes,
+  Kids: FaChild,
+  Sports: FaRunning,
+};
 
 const DropDown = ({ categoriesData, setDropDown }) => {
-  const nevigate = useNavigate();
+  const navigate = useNavigate();
   const submitHandle = (i) => {
-    nevigate(`/products?category=${i.title}`);
+    navigate(`/products?category=${i.title}`);
     setDropDown(false);
     window.location.reload();
   };
   return (
-    <div className="pb-4 w-[270px] bg-[#fff] absolute z-30 rounded-b-md shadow-sm">
+    <div className="pb-2 w-[270px] bg-white border border-sand absolute z-30 rounded-b-md shadow-card">
       {categoriesData &&
         categoriesData.map((i, index) => {
+          const Icon = categoryIcons[i.title] || GiConverseShoe;
           return (
             <div
               key={index}
-              className={`${styles.noramlFlex}`}
+              className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-bone transition-colors"
               onClick={() => submitHandle(i)}
             >
-              <img
-                src={i.image_Url}
-                style={{
-                  width: "25px",
-                  height: "25px",
-                  objectFit: "contain",
-                  marginLeft: "10px",
-                  userSelect: "none",
-                }}
-                alt=""
-              />
-              <h3 className="m-3 cursor-pointer select-none ">{i.title}</h3>
+              <span className="text-marigold-dark text-[22px] shrink-0">
+                <Icon />
+              </span>
+              <h3 className="text-[15px] text-espresso cursor-pointer select-none">
+                {i.title}
+              </h3>
             </div>
           );
         })}
