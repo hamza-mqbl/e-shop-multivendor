@@ -474,54 +474,58 @@ const ChangPassword = () => {
       .catch((error) => toast.error(error.response.data.message));
   };
   return (
-    <div className="w-full px-5">
-      <h1 className="text-[24px] block text-center font-display font-semibold text-espresso">
-        Change Password
+    <div className="w-full max-w-[460px] mx-auto">
+      <h1 className="text-[22px] font-display font-semibold text-espresso">
+        Change password
       </h1>
-      <div className="w-full">
-        <form
-          aria-required
-          onSubmit={passwordChangeHandler}
-          className="flex flex-col items-center"
+      <p className="text-[14px] text-clay mt-1 mb-6">
+        Use a strong password you don't use anywhere else.
+      </p>
+      <form aria-required onSubmit={passwordChangeHandler} className="space-y-5">
+        <div>
+          <label className="block pb-2 text-[14px] font-medium text-espresso">
+            Current password
+          </label>
+          <input
+            type="password"
+            required
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+            className={styles.input}
+          />
+        </div>
+        <div>
+          <label className="block pb-2 text-[14px] font-medium text-espresso">
+            New password
+          </label>
+          <input
+            type="password"
+            required
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            className={styles.input}
+          />
+          <p className="text-[12px] text-clay mt-1">At least 4 characters.</p>
+        </div>
+        <div>
+          <label className="block pb-2 text-[14px] font-medium text-espresso">
+            Confirm new password
+          </label>
+          <input
+            type="password"
+            required
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className={styles.input}
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full h-[48px] bg-espresso hover:bg-coffee text-bone font-display font-medium rounded-xl transition-colors"
         >
-          <div className="w-[100%] 800px:w-[50%] mt-5">
-            <label className="block pb-2">Enter Your old password</label>
-            <input
-              type="password"
-              required
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-            />
-          </div>
-          <div className="w-[100%] 800px:w-[50%] mt-2">
-            <label className="block pb-2">Enter Your new password</label>
-            <input
-              type="password"
-              required
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-            />
-          </div>
-          <div className="w-[100%] 800px:w-[50%] mt-2">
-            <label className="block pb-2">Enter your confirm password</label>
-            <input
-              type="password"
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-            />
-            <input
-              className="w-[95%] h-[46px] bg-espresso hover:bg-coffee text-bone font-display font-medium text-center rounded-xl mt-8 cursor-pointer transition-colors"
-              required
-              value="Update"
-              type="submit"
-            />
-          </div>
-        </form>
-      </div>
+          Update password
+        </button>
+      </form>
     </div>
   );
 };

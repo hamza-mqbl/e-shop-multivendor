@@ -25,11 +25,11 @@ select {
   outline: none;
 }
 
-/* Visible keyboard focus everywhere — accessibility floor */
+/* Visible keyboard focus for interactive controls — accessibility floor.
+   Form fields are intentionally excluded: they already show a single marigold
+   border on focus, so adding an outline here would render a double border. */
 a:focus-visible,
 button:focus-visible,
-input:focus-visible,
-select:focus-visible,
 [tabindex]:focus-visible {
   outline: 2px solid #F2A93B; /* marigold */
   outline-offset: 2px;
