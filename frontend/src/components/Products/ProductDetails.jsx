@@ -160,7 +160,7 @@ const ProductDetails = ({ data }) => {
           <div className="block w-full 800px:flex 800px:gap-10 pb-12">
             {/* ── gallery ── */}
             <div className="w-full 800px:w-[48%]">
-              <div className="800px:sticky 800px:top-24">
+              <div>
                 <div className="relative w-full aspect-square bg-white border border-sand rounded-2xl overflow-hidden">
                   <img
                     src={data.images[select]?.url}
@@ -430,35 +430,90 @@ const ProductDetailsInfo = ({
       </div>
 
       {active === 1 ? (
-        <p className="py-5 text-[15px] leading-8 text-espresso/80 whitespace-pre-line">
-          {data.description}
-        </p>
+        <div className="py-5">
+          <p className="text-[15px] leading-8 text-espresso/80 whitespace-pre-line">
+            {data.description}
+          </p>
+          <h4 className="font-display font-semibold text-espresso text-[18px] mt-8 mb-2">
+            Specifications
+          </h4>
+          <div className="grid grid-cols-1 800px:grid-cols-2 gap-x-12 max-w-[820px]">
+            {[
+              ["Brand", data.brand],
+              ["For", data.gender],
+              ["Material", data.material],
+              ["Category", data.category],
+              ["Available sizes (UK)", data.sizes && data.sizes.join(", ")],
+              ["Colours", data.colors && data.colors.join(", ")],
+            ]
+              .filter(([, v]) => v && String(v).length > 0)
+              .map(([k, v]) => (
+                <div
+                  key={k}
+                  className="flex justify-between gap-4 py-3 border-b border-sand text-[14px]"
+                >
+                  <span className="text-clay">{k}</span>
+                  <span className="text-espresso font-medium text-right">
+                    {v}
+                  </span>
+                </div>
+              ))}
+          </div>
+        </div>
       ) : null}
 
       {active === 2 ? (
-        <div className="w-full min-h-[30vh] flex flex-col py-5 items-center">
-          {data &&
-            data.reviews.map((item, index) => (
-              <div className="w-full flex my-3" key={index}>
-                <img
-                  src={`${backend_url}/${item.user.avatar}`}
-                  className="w-[50px] h-[50px] rounded-full object-cover"
-                  alt=""
-                />
-                <div className="pl-3">
-                  <div className="w-full flex items-center">
-                    <h1 className="font-[500] text-espresso mr-3">
-                      {item.user.name}
-                    </h1>
-                    <Rating ratings={data?.ratings} />
-                  </div>
-                  <p className="text-clay mt-1">{item.comment}</p>
-                </div>
+        <div className="w-full min-h-[30vh] py-5">
+          {/* ratings summary */}
+          <div className="flex items-center gap-6 pb-6 border-b border-sand">
+            <div className="text-center shrink-0">
+              <p className="font-display text-[42px] font-semibold text-espresso leading-none">
+                {Number(data.ratings || 0).toFixed(1)}
+              </p>
+              <div className="flex justify-center mt-1">
+                <Rating ratings={data.ratings} />
               </div>
-            ))}
-          {data && data.reviews.length === 0 && (
-            <h5 className="text-clay">No reviews yet for this product.</h5>
-          )}
+              <p className="text-[12px] text-clay mt-1">
+                {data.reviews.length}{" "}
+                {data.reviews.length === 1 ? "review" : "reviews"}
+              </p>
+            </div>
+            <p className="text-[14px] text-clay leading-relaxed">
+              What customers are saying about the {data.name}. Verified buyers
+              can leave a review from their orders after delivery.
+            </p>
+          </div>
+
+          {/* review list */}
+          <div className="mt-6 flex flex-col gap-6">
+            {data &&
+              data.reviews.map((item, index) => (
+                <div className="flex gap-3" key={index}>
+                  <img
+                    src={`${backend_url}/${item.user.avatar}`}
+                    className="w-[44px] h-[44px] rounded-full object-cover"
+                    alt=""
+                  />
+                  <div>
+                    <div className="flex items-center gap-3">
+                      <h1 className="font-[600] text-espresso">
+                        {item.user.name}
+                      </h1>
+                      <Rating ratings={item.rating} />
+                    </div>
+                    <p className="text-clay mt-1">{item.comment}</p>
+                  </div>
+                </div>
+              ))}
+            {data && data.reviews.length === 0 && (
+              <div className="text-center py-10">
+                <p className="text-espresso font-medium">No reviews yet</p>
+                <p className="text-clay text-[14px] mt-1">
+                  Be the first to review this product after your purchase.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       ) : null}
 
