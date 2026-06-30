@@ -11,7 +11,6 @@ export const loadUser = () => async (dispatch) => {
     const { data } = await axios.get(`${server}/user/getuser`, {
       withCredentials: true,
     });
-    console.log("🚀 ~ loadUser ~ data:", data);
 
     dispatch({
       type: "LoadUserSuccess",
@@ -27,7 +26,6 @@ export const loadUser = () => async (dispatch) => {
 
 // load seller
 export const loadSeller = () => async (dispatch) => {
-  console.log("server,,,,,,,,,,,,,,", server);
   try {
     dispatch({
       type: "LoadSellerRequest",
@@ -35,7 +33,6 @@ export const loadSeller = () => async (dispatch) => {
     const { data } = await axios.get(`${server}/shop/getSeller`, {
       withCredentials: true,
     });
-    console.log("🚀 ~ loadSeller ~ data:", data);
     dispatch({
       type: "LoadSellerSuccess",
       payload: data.seller,
@@ -109,7 +106,6 @@ export const updateUserAddress =
         },
       });
     } catch (error) {
-      console.log("🚀 ~ error:", error);
       dispatch({
         type: "updateUserAddressFailed",
         payload: error.response.data.message,

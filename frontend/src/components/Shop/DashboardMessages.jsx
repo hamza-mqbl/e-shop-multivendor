@@ -54,7 +54,6 @@ const DashboardMessages = () => {
         setConversations(res.data.conversations);
       })
       .catch((error) => {
-        console.log(error);
       });
   }, [seller]);
   useEffect(() => {
@@ -68,12 +67,9 @@ const DashboardMessages = () => {
   }, [seller]);
 
   const onlineCheck = (chat) => {
-    console.log("🚀 ~ onlineCheck ~ chat:", chat);
     const chatMembers = chat.members.find((member) => member !== seller._id);
-    console.log("🚀 ~ onlineCheck ~ chatMembers:", chatMembers);
 
     if (onlineUser.length > 0) {
-      console.log("🚀 ~ onlineCheck ~ chatMembers:", onlineUser[0]?.userId);
     }
 
     const online = onlineUser.find((user) => user.userId === chatMembers);
@@ -89,14 +85,12 @@ const DashboardMessages = () => {
         );
         setMessages(response.data.messages);
       } catch (error) {
-        console.log(error);
       }
     };
     getMessage();
   }, [currentChat]);
   // create new message
   const sendMessageHandler = async (e) => {
-    console.log("i m clicked");
     e.preventDefault();
 
     const message = {
@@ -124,11 +118,9 @@ const DashboardMessages = () => {
             updateLastMessage();
           })
           .catch((error) => {
-            console.log(error);
           });
       }
     } catch (error) {
-      console.log(error);
     }
   };
   const updateLastMessage = async () => {
@@ -143,11 +135,9 @@ const DashboardMessages = () => {
         lastMessageId: seller._id,
       })
       .then((res) => {
-        console.log(res.data.conversation);
         setNewMessage("");
       })
       .catch((error) => {
-        console.log(error);
       });
   };
 
@@ -163,7 +153,7 @@ const DashboardMessages = () => {
       {/* All messages list */}
       {!open && (
         <>
-          <h1 className="text-center text-[30px] py-3 font-Poppins">
+          <h1 className="text-center text-[30px] py-3 font-display">
             All Messages
           </h1>
           {conversations &&
@@ -210,7 +200,6 @@ const MessageList = ({
   online,
   setActiveStatus,
 }) => {
-  console.log("🚀 ~ online:", online);
   const navigate = useNavigate();
   const handleClick = (id) => {
     navigate(`?${id}`);
@@ -218,18 +207,15 @@ const MessageList = ({
   };
   const [active, setActive] = useState(0);
   const [user, setUser] = useState([]);
-  console.log("🚀 ~ user:", user)
   useEffect(() => {
     setActiveStatus(online);
     const userId = data.members.find((user) => user !== me);
-    console.log("🚀 ~ useEffect ~ userId:", userId);
 
     const getUser = async () => {
       try {
         const res = await axios.get(`${server}/user/user-info/${userId}`);
         setUser(res.data.user);
       } catch (error) {
-        console.log(error);
       }
     };
     getUser();
@@ -285,16 +271,24 @@ const SellerInbox = ({
   return (
     <div className=" w-full min-h-full flex flex-col justify-between">
       {/* message header */}
-      <div className="w-full flex p-3 items-center justify-between bg-slate-200">
-        <div className="flex">
+      <div className="w-full flex p-4 items-center justify-between bg-white border-b border-sand">
+        <div className="flex items-center">
           <img
-            src={`${backend_url}/${userData?.avatar}`}
-            className=" w-[60px] h-[60px]  rounded-full"
+            src={userData?.avatar?.url || `${backend_url}/${userData?.avatar}`}
+            className="w-[48px] h-[48px] rounded-full object-cover border border-sand"
             alt=""
           />
-          <div className=" pl-3">
-            <h1 className="text-[18px] font-[600]">{userData?.name}</h1>
-            <h1>{activeStatus ? "Active Now" : ""}</h1>
+          <div className="pl-3">
+            <h1 className="text-[16px] font-display font-semibold text-espresso">
+              {userData?.name}
+            </h1>
+            <p
+              className={`text-[12px] ${
+                activeStatus ? "text-green-600" : "text-clay"
+              }`}
+            >
+              {activeStatus ? "Active now" : "Offline"}
+            </p>
           </div>
         </div>
         <AiOutlineArrowRight
@@ -315,19 +309,26 @@ const SellerInbox = ({
             >
               {item.sender !== sellerId && (
                 <img
-                  src="http://localhost:8000//pro2-1721227668043-138192024.png"
-                  className=" w-[40px] h-[40px] mr-3  rounded-full"
+                  src={
+                    userData?.avatar?.url ||
+                    `${backend_url}/${userData?.avatar}`
+                  }
+                  className="w-[34px] h-[34px] mr-2 rounded-full object-cover border border-sand self-end"
                   alt=""
                 />
               )}
               <div
-                className={`w-max p-2 rounded ${
-                  item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]"
-                } text-[#fff] h-min`}
+                className={`w-max max-w-[420px] px-3 py-2 text-[14px] ${
+                  item.sender === sellerId
+                    ? "bg-espresso text-bone rounded-2xl rounded-br-sm"
+                    : "bg-white text-espresso border border-sand rounded-2xl rounded-bl-sm"
+                }`}
               >
-                <p>{item.text}</p>
+                <p className="break-words">{item.text}</p>
               </div>
-              <p>{format(item.createdAt)}</p>
+              <p className="text-[11px] text-clay self-end ml-2">
+                {format(item.createdAt)}
+              </p>
             </div>
           ))}
       </div>

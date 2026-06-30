@@ -88,7 +88,6 @@ const UserInbox = () => {
         );
         setMessages(response.data.messages);
       } catch (error) {
-        console.log(error);
       }
     };
     getMessage();
@@ -122,11 +121,9 @@ const UserInbox = () => {
             updateLastMessage();
           })
           .catch((error) => {
-            console.log(error);
           });
       }
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -145,7 +142,6 @@ const UserInbox = () => {
         setNewMessage("");
       })
       .catch((error) => {
-        console.log(error);
       });
   };
 
@@ -187,7 +183,6 @@ const UserInbox = () => {
           updateLastMessageForImage();
         });
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -278,7 +273,6 @@ const MessageList = ({
 }) => {
   const [active, setActive] = useState(0);
   const [user, setUser] = useState([]);
-  console.log("🚀 ~ user:", user.avatar);
   const navigate = useNavigate();
   const handleClick = (id) => {
     navigate(`/inbox?${id}`);
@@ -293,7 +287,6 @@ const MessageList = ({
         const res = await axios.get(`${server}/shop/get-shop-info/${userId}`);
         setUser(res.data.shop);
       } catch (error) {
-        console.log(error);
       }
     };
     getUser();

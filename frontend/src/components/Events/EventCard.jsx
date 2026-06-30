@@ -12,7 +12,6 @@ const EventCard = ({ active, data }) => {
   const addToCartHandler = (data) => {
     // console.log("🚀 ~ addToCartHandler ~ data:", data._id)
     const isItemExists = cart && cart.find((i) => i._id === data?._id);
-    console.log("🚀 ~ addToCartHandler ~ isItemExists:", isItemExists);
     if (isItemExists) {
       toast.error("Item already in cart!");
     } else {

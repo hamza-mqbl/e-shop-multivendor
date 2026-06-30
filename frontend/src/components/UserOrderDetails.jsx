@@ -122,7 +122,7 @@ const UserOrderDetails = () => {
                 className="cursor-pointer"
               />
             </div>
-            <h2 className="text-[30px] font-[500] font-Poppins text-center">
+            <h2 className="text-[30px] font-[500] font-display text-center">
               Give a Review
             </h2>
             <br />

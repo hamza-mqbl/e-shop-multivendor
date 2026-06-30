@@ -13,14 +13,10 @@ const ProductDetailsPage = () => {
   const [data, setData] = useState(null);
   const { allProducts } = useSelector((state) => state.products);
   const { allEvents } = useSelector((state) => state.events);
-  console.log("🚀 ~ ProductDetailsPage ~ allEvents:", allEvents);
 
   const [searchParams] = useSearchParams();
   const eventData = searchParams.get("isEvent");
-  console.log("🚀 ~ ProductDetailsPage ~ eventData:", eventData);
   useEffect(() => {
-    console.log("🚀 ~ useEffect ~ allProducts:", allProducts);
-    console.log("🚀 ~ useEffect ~ id:", id);
     if (eventData == null) {
       if (allProducts?.length > 0 && id) {
         const foundData = allProducts.find((i) => i._id === id);
@@ -33,7 +29,6 @@ const ProductDetailsPage = () => {
   }, [allProducts, allEvents, id, eventData]);
 
   useEffect(() => {
-    console.log("🚀 ~ ProductDetailsPage ~ data (inside useEffect):", data);
   }, [data]);
 
   return (

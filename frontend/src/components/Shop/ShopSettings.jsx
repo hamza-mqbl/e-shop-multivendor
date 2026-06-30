@@ -58,7 +58,6 @@ const ShopSettings = () => {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res,"thst sd");
         dispatch(loadSeller());
       })
       .catch((error) => {

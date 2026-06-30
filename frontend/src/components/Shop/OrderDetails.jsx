@@ -19,7 +19,6 @@ const OrderDetails = () => {
     dispatch(getAllOrdersOfShop(seller._id));
   }, [dispatch]);
   const data = orders && orders.find((item) => item._id === id);
-  console.log("🚀 ~ OrderDetails ~ data:", data);
   const orderUpdateHandler = async (e) => {
     await axios
       .put(

@@ -22,7 +22,6 @@ const ShopProfileData = ({ isOwner }) => {
   }, [dispatch]);
   const allReviews =
     products && products.map((product) => product.reviews).flat();
-    console.log("🚀 ~ ShopProfileData ~ allReviews:", allReviews)
 
     const [active, setActive] = useState(1);
   return (

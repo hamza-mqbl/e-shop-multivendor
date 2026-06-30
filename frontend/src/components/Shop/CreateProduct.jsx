@@ -29,10 +29,8 @@ const CreateProduct = () => {
   useEffect(() => {
     if (error) {
       toast.error(error);
-      console.log("this is error", error);
     }
     if (success) {
-      console.log(success)
       toast.success("Product created successfully");
       // navigate("/dashboard");
       // window.location.reload();

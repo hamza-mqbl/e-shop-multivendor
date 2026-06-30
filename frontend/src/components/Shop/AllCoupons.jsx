@@ -39,7 +39,6 @@ const AllCoupons = () => {
   }, [dispatch]);
   // console.log(products);
   const handleDelete = async (id) => {
-    console.log(id);
     axios
       .delete(`${server}/coupon/delete-coupon/${id}`, {
         withCredentials: true,

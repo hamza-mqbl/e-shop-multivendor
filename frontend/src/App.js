@@ -31,6 +31,7 @@ import {
   UserInbox,
   CartPage,
   WishlistPage,
+  NotFoundPage,
 } from "./routes/Routes.js";
 import ProtectedRoute from "./routes/ProtectedRoute.js";
 import ScrollToTop from "./components/Route/ScrollToTop.jsx";
@@ -276,6 +277,7 @@ function App() {
               }
             />
             <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
 
           <ToastContainer

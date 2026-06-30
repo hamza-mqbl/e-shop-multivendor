@@ -196,8 +196,6 @@ const ProfileContent = ({ active }) => {
 const AllOrders = () => {
   const { orders } = useSelector((state) => state.order);
   const { user } = useSelector((state) => state.user);
-  console.log("🚀 ~ AllOrders ~ user:", user);
-  console.log("🚀 ~ AllOrders ~ orders:", orders);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -468,7 +466,6 @@ const ChangPassword = () => {
         { withCredentials: true }
       )
       .then((res) => {
-        console.log("🚀 ~ .then ~ res:", res.data);
         toast.success(res.data.message);
       })
       .catch((error) => toast.error(error.response.data.message));
@@ -591,7 +588,7 @@ const Address = () => {
                 onClick={() => setOpen(false)}
               />
             </div>
-            <h1 className="text-center text-[25px] font-Poppins">
+            <h1 className="text-center text-[25px] font-display">
               Add New Address
             </h1>
             <div className="w-full">

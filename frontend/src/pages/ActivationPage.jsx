@@ -6,7 +6,6 @@ import { server } from "../server";
 
 const ActivationPage = () => {
   const { activation_token } = useParams();
-  console.log(activation_token)
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -17,7 +16,6 @@ const ActivationPage = () => {
             activation_token,
           })
           .then((res) => {
-            console.log(res);
           })
           .catch((err) => {
             setError(true);

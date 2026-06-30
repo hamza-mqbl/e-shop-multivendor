@@ -13,7 +13,6 @@ export const Signup = () => {
   const [name, setName] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [loading, setLoading] = useState(false); // State to manage loading status
-  console.log("🚀 ~ Signup ~ email:", email, name, password, avatar);
 
   const handleFileInputChange = (e) => {
     setAvatar(e.target.files[0]);

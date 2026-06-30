@@ -14,7 +14,6 @@ const ShopInfo = ({ isOwner }) => {
   const { products } = useSelector((state) => state.products);
 
   const { id } = useParams();
-  console.log("🚀 ~ ShopInfo ~ id:", id)
   const [data, setData] = useState({});
   
   useEffect(() => {
@@ -23,12 +22,10 @@ const ShopInfo = ({ isOwner }) => {
     axios
       .get(`${server}/shop/get-shop-info/${id}`)
       .then((res) => {
-        console.log(res);
         setData(res.data.shop);
       })
       .catch((error) => console.log(error));
   }, []);
-  console.log(data.avatar);
   const navigate = useNavigate();
   const logoutHandler = async () => {
     axios.get(`${server}/shop/logout`, {
@@ -38,7 +35,6 @@ const ShopInfo = ({ isOwner }) => {
     navigate("/shop-login");
   };
   const { seller } = useSelector((state) => state.seller);
-  console.log(seller);
   return (
     <div>
       <div className="w-full py-5 ">

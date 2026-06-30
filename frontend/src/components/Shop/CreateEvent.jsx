@@ -43,19 +43,16 @@ const CreateEvent = () => {
     : today;
 
   useEffect(() => {
-    console.log("useEffect - Success state:", success);
 
     // Cleanup function
     return () => {
       if (success === true) {
-        console.log("Success is true. Navigating to /dashboard");
         toast.success("Event created successfully!");
         // navigate("/dashboard");
         // window.location.reload();
       }
       if (error) {
         toast.error(error);
-        console.log("this is error", error);
       }
     };
   }, [success,error, dispatch, navigate]);
@@ -81,7 +78,6 @@ const CreateEvent = () => {
     newForm.append("shopId", seller._id);
     newForm.append("start_Date", startDate.toISOString());
     newForm.append("Finish_Date", endDate.toISOString());
-    console.log("🚀 ~ handleSubmit ~ newForm:", newForm)
 
     // Append images in the loop
     images.forEach((image) => {
@@ -93,7 +89,7 @@ const CreateEvent = () => {
 
   return (
     <div className="w-[90%] 800px:w-[50%] bg-white border border-sand shadow-card rounded-2xl p-5 overflow-y-scroll">
-      <h5 className="font-[30px] font-Poppins text-center">Create Event</h5>
+      <h5 className="font-[30px] font-display text-center">Create Event</h5>
       {/* create product form */}
       <form onSubmit={handleSubmit}>
         <br />

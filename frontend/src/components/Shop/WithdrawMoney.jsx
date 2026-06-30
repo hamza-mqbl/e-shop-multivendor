@@ -63,7 +63,6 @@ const WithdrawMoney = () => {
         });
       })
       .catch((error) => {
-        console.log(error.response.data.message);
       });
   };
 
@@ -103,9 +102,10 @@ const WithdrawMoney = () => {
 
   return (
     <div className="w-full h-[90vh] p-8">
-      <div className="w-full bg-white h-full rounded flex items-center justify-center flex-col">
-        <h5 className="text-[20px] pb-4">
-          Available Balance: ${availableBalance}
+      <div className="w-full bg-white border border-sand rounded-2xl h-full flex items-center justify-center flex-col">
+        <h5 className="text-[20px] text-espresso pb-4">
+          Available balance:{" "}
+          <span className="font-mono font-semibold">Rs {availableBalance}</span>
         </h5>
         <div
           className={`${styles.button} text-white !h-[42px] !rounded`}
@@ -130,7 +130,7 @@ const WithdrawMoney = () => {
             </div>
             {paymentMethod ? (
               <div>
-                <h3 className="text-[22px] font-Poppins text-center font-[600]">
+                <h3 className="text-[22px] font-display text-center font-[600]">
                   Add new Withdraw Method:
                 </h3>
                 <form onSubmit={handleSubmit}>
@@ -265,7 +265,7 @@ const WithdrawMoney = () => {
               </div>
             ) : (
               <>
-                <h3 className="text-[22px] font-Poppins">
+                <h3 className="text-[22px] font-display">
                   Available Withdraw Methods:
                 </h3>
 

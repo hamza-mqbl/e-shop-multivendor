@@ -14,9 +14,7 @@ const AllEvents = () => {
   useEffect(() => {
     dispatch(getAlleventsShop(seller._id));
   }, []);
-  console.log(events);
   const handleDelete = (id) => {
-    console.log(id);
     dispatch(deleteevent(id));
     window.location.reload();
   };

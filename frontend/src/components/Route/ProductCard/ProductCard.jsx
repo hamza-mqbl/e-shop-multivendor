@@ -17,8 +17,6 @@ import { addToCart } from "../../../redux/actions/cart.js";
 import Rating from "../../Products/Rating.jsx";
 
 const ProductCard = ({ data,isEvent }) => {
-  console.log("🚀 ~ ProductCard ~ data:", data);
-  console.log(data);
   const dispatch = useDispatch();
 
   const { wishlist } = useSelector((state) => state.wishlist);

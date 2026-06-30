@@ -21,6 +21,7 @@ import ShopSettingsPage from "../pages/ShopSettingsPage.jsx";
 import UserInbox from "../pages/UserInbox.jsx";
 import CartPage from "../pages/CartPage.jsx";
 import WishlistPage from "../pages/WishlistPage.jsx";
+import NotFoundPage from "../pages/NotFoundPage.jsx";
 
 export {
   LoginPage,
@@ -44,5 +45,6 @@ export {
   ShopSettingsPage,
   UserInbox,
   CartPage,
-  WishlistPage
+  WishlistPage,
+  NotFoundPage
 };

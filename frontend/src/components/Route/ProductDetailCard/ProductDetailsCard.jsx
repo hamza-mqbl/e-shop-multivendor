@@ -32,12 +32,10 @@ function ProductDetailsCard({ setOpen, data }) {
       setCount(count - 1);
     }
   };
-  console.log(data);
 
   const incrementCount = () => {
     setCount(count + 1);
   };
-  console.log(data);
 
   const addToCartHandler = (id) => {
     const isItemExists = cart && cart.find((i) => i._id === id);
@@ -103,14 +101,16 @@ function ProductDetailsCard({ setOpen, data }) {
                   </div>
                 </div>
                 <div
-                  className={`${styles.button} bg-[#000] mt-4 rounded-[4px] h-11`}
+                  className={`${styles.button} mt-4 rounded-xl h-11`}
                   onClick={handleMessageSubmit}
                 >
-                  <span className="text-[#fff] flex items-center">
+                  <span className="text-bone flex items-center">
                     Send Message <AiOutlineMessage className="ml-1" />
                   </span>
                 </div>
-                <h5 className="text-[16px] text-[red] mt-5">(50) Sold out</h5>
+                <h5 className="text-[14px] text-clay mt-5">
+                  {data.sold_out} sold
+                </h5>
               </div>
 
               <div className="w-full 800px:w-[50%] pt-5 pl-[5px] pr-[5px]">
@@ -135,7 +135,7 @@ function ProductDetailsCard({ setOpen, data }) {
                     >
                       -
                     </button>
-                    <span className="bg-gray-200 text-gray-800 font-medium px-4 py-[11px]">
+                    <span className="bg-bone text-espresso font-mono font-medium px-4 py-[11px]">
                       {count}
                     </span>
                     <button
@@ -151,7 +151,7 @@ function ProductDetailsCard({ setOpen, data }) {
                         size={30}
                         className="cursor-pointer"
                         onClick={() => removeFromWishlistHandler(data)}
-                        color={click ? "red" : "#333"}
+                        color={click ? "#B5462B" : "#241A14"}
                         title="Remove from wishlist"
                       />
                     ) : (

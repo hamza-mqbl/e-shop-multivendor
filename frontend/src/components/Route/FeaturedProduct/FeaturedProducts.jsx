@@ -6,7 +6,6 @@ import { productData } from "../../../static/data";
 
 const FeaturedProduct = () => {
   const {allProducts} = useSelector((state) => state.products);
-   console.log("🚀 ~ FeaturedProduct ~ allProducts:", allProducts)
    
   return (
     <div>
