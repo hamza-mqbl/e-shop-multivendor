@@ -19,6 +19,7 @@ import OrderDetailsPage from "../pages/OrderDetailsPage.jsx";
 import TrackOrderPage from "../pages/TrackOrderPage.jsx";
 import ShopSettingsPage from "../pages/ShopSettingsPage.jsx";
 import UserInbox from "../pages/UserInbox.jsx";
+import CartPage from "../pages/CartPage.jsx";
 
 export {
   LoginPage,
@@ -40,5 +41,6 @@ export {
   OrderDetailsPage,
   TrackOrderPage,
   ShopSettingsPage,
-  UserInbox
+  UserInbox,
+  CartPage
 };

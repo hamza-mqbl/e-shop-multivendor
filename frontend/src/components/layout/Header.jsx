@@ -7,7 +7,6 @@ import {
   AiOutlineSearch,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
-import Cart from "../cart/Cart.jsx";
 import WishList from "../wishlist/WishList.jsx";
 import { CgProfile } from "react-icons/cg";
 import { IoIosArrowDown } from "react-icons/io";
@@ -43,7 +42,6 @@ const Header = ({ activeHeading }) => {
   const [active, setActive] = useState(false);
   const [dropDown, setDropDown] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
-  const [openCart, setOpenCart] = useState(false);
   const [openWishList, setOpenWishList] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -149,15 +147,10 @@ const Header = ({ activeHeading }) => {
               </button>
 
               {/* cart */}
-              <button
-                type="button"
-                onClick={() => setOpenCart(true)}
-                className={iconBtn}
-                title="Cart"
-              >
+              <Link to="/cart" className={iconBtn} title="Cart">
                 <AiOutlineShoppingCart size={24} />
                 <span className={badge}>{cart && cart.length}</span>
-              </button>
+              </Link>
 
               {/* account */}
               {isAuthenticated ? (
@@ -179,7 +172,6 @@ const Header = ({ activeHeading }) => {
         </div>
 
         {/* popups */}
-        {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
         {openWishList ? <WishList setOpenWishList={setOpenWishList} /> : null}
       </div>
 
@@ -203,17 +195,13 @@ const Header = ({ activeHeading }) => {
             </Link>
           </div>
           <div>
-            <div
-              className="relative mr-[20px]"
-              onClick={() => setOpenCart(true)}
-            >
+            <Link to="/cart" className="relative mr-[20px] inline-block">
               <AiOutlineShoppingCart size={28} className="text-espresso" />
               <span className="absolute -right-2 -top-2 rounded-full bg-brick w-[18px] h-[18px] flex items-center justify-center text-white font-mono text-[11px]">
                 {cart && cart.length}
               </span>
-            </div>
+            </Link>
           </div>
-          {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
           {openWishList ? <WishList setOpenWishList={setOpenWishList} /> : null}
         </div>
 
