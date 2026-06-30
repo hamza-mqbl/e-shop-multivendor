@@ -152,7 +152,7 @@ const AllCoupons = () => {
               />
             </div>
 
-            <h5 className="text-[30px] font-Poppins text-center">
+            <h5 className="text-[26px] font-display font-semibold text-espresso text-center">
               Create Coupon code
             </h5>
             {/* create coupons code */}
@@ -167,7 +167,7 @@ const AllCoupons = () => {
                   name="name"
                   required
                   value={name}
-                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Enter your coupon code name..."
                 />
@@ -182,7 +182,7 @@ const AllCoupons = () => {
                   name="value"
                   value={value}
                   required
-                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                   onChange={(e) => setValue(e.target.value)}
                   placeholder="Enter your coupon code value..."
                 />
@@ -194,7 +194,7 @@ const AllCoupons = () => {
                   type="number"
                   name="value"
                   value={minAmount}
-                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                   onChange={(e) => setMinAmount(e.target.value)}
                   placeholder="Enter your coupon code min amount..."
                 />
@@ -206,7 +206,7 @@ const AllCoupons = () => {
                   type="number"
                   name="value"
                   value={maxAmount}
-                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                   onChange={(e) => setMaxAmount(e.target.value)}
                   placeholder="Enter your coupon code max amount..."
                 />
@@ -215,7 +215,7 @@ const AllCoupons = () => {
               <div>
                 <label className="pb-2">Selected Product</label>
                 <select
-                  className="w-full mt-2 border h-[35px] rounded-[5px]"
+                  className="w-full mt-2 border border-sand focus:border-marigold h-[40px] rounded-lg transition-colors"
                   value={selectedProducts}
                   onChange={(e) => setSelectedProducts(e.target.value)}
                 >
@@ -235,7 +235,7 @@ const AllCoupons = () => {
                 <input
                   type="submit"
                   value="Create"
-                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+                  className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                 />
               </div>
             </form>

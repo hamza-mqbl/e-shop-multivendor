@@ -6,6 +6,7 @@ import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 import { RxAvatar } from "react-icons/rx";
+import { FaShoePrints } from "react-icons/fa";
 
 const ShopCreate = () => {
   const [email, setEmail] = useState("");
@@ -52,19 +53,31 @@ const ShopCreate = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Register as a seller
+    <div className="min-h-screen bg-bone flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
+        <Link to="/" className="inline-flex items-center gap-2 justify-center">
+          <FaShoePrints className="text-marigold text-[24px] -rotate-12" />
+          <span className="font-display text-[30px] font-semibold text-espresso">
+            Qadam
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-clay border border-sand rounded px-1.5 py-0.5">
+            Seller
+          </span>
+        </Link>
+        <h2 className="mt-6 font-display text-3xl font-semibold text-espresso">
+          Create your shop
         </h2>
+        <p className="mt-2 text-sm text-clay">
+          Start selling on Qadam in minutes.
+        </p>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-[35rem]">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-white border border-sand py-8 px-4 shadow-card rounded-2xl sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-espresso"
               >
                 Shop Name
               </label>
@@ -75,7 +88,7 @@ const ShopCreate = () => {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+                  className="appearance-none block w-full px-3 py-2 border border-sand rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                 />
               </div>
             </div>
@@ -83,7 +96,7 @@ const ShopCreate = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-espresso"
               >
                 Phone Number
               </label>
@@ -94,7 +107,7 @@ const ShopCreate = () => {
                   required
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+                  className="appearance-none block w-full px-3 py-2 border border-sand rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                 />
               </div>
             </div>
@@ -102,7 +115,7 @@ const ShopCreate = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-espresso"
               >
                 Email address
               </label>
@@ -114,7 +127,7 @@ const ShopCreate = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+                  className="appearance-none block w-full px-3 py-2 border border-sand rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                 />
               </div>
             </div>
@@ -122,7 +135,7 @@ const ShopCreate = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-espresso"
               >
                 Address
               </label>
@@ -133,7 +146,7 @@ const ShopCreate = () => {
                   required
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+                  className="appearance-none block w-full px-3 py-2 border border-sand rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                 />
               </div>
             </div>
@@ -141,7 +154,7 @@ const ShopCreate = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-espresso"
               >
                 Zip Code
               </label>
@@ -152,7 +165,7 @@ const ShopCreate = () => {
                   required
                   value={zipCode}
                   onChange={(e) => setZipCode(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+                  className="appearance-none block w-full px-3 py-2 border border-sand rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                 />
               </div>
             </div>
@@ -160,7 +173,7 @@ const ShopCreate = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-espresso"
               >
                 Password
               </label>
@@ -172,7 +185,7 @@ const ShopCreate = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+                  className="appearance-none block w-full px-3 py-2 border border-sand rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
                 />
                 {visible ? (
                   <AiOutlineEye
@@ -193,7 +206,7 @@ const ShopCreate = () => {
             <div>
               <label
                 htmlFor="avatar"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-espresso"
               ></label>
               <div className="mt-2 flex items-center">
                 <span className="inline-block h-8 w-8 rounded-full overflow-hidden">
@@ -209,7 +222,7 @@ const ShopCreate = () => {
                 </span>
                 <label
                   htmlFor="file-input"
-                  className="ml-5 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                  className="ml-5 flex items-center justify-center px-4 py-2 border border-sand rounded-md shadow-sm text-sm font-medium text-espresso bg-white hover:bg-bone"
                 >
                   <span>Upload a file</span>
                   <input
@@ -226,14 +239,17 @@ const ShopCreate = () => {
             <div>
               <button
                 type="submit"
-                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-espresso hover:bg-coffee"
+                className="w-full h-[46px] flex justify-center items-center text-[15px] font-display font-medium rounded-xl text-bone bg-espresso hover:bg-coffee transition-colors"
               >
-                Submit
+                Create shop
               </button>
             </div>
-            <div className={`${styles.noramlFlex} w-full`}>
-              <h4>Already have an account?</h4>
-              <Link to="/shop-login" className="text-marigold-dark pl-2">
+            <div className={`${styles.noramlFlex} w-full text-sm`}>
+              <h4 className="text-clay">Already have a shop?</h4>
+              <Link
+                to="/shop-login"
+                className="text-marigold-dark font-medium pl-2 hover:text-espresso transition-colors"
+              >
                 Sign in
               </Link>
             </div>

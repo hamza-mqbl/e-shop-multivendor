@@ -72,8 +72,8 @@ const CreateProduct = () => {
   };
 
   return (
-    <div className="w-[90%] 800px:w-[50%] bg-white shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
-      <h5 className="text-[30px] font-Poppins text-center">Create Products</h5>
+    <div className="w-[90%] 800px:w-[50%] bg-white border border-sand shadow-card rounded-2xl p-5 overflow-y-scroll">
+      <h5 className="text-[26px] font-display font-semibold text-espresso text-center">Create Products</h5>
       {/* create product form */}
       <form onSubmit={handleSubmit}>
         <br />
@@ -85,7 +85,7 @@ const CreateProduct = () => {
             type="text"
             name="name"
             value={name}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter your product name..."
           />
@@ -102,7 +102,7 @@ const CreateProduct = () => {
             type="text"
             name="description"
             value={description}
-            className="mt-2 appearance-none block w-full pt-2 px-3 border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full pt-2 px-3 border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Enter your product description..."
           ></textarea>
@@ -113,7 +113,7 @@ const CreateProduct = () => {
             Category <span className="text-red-500">*</span>
           </label>
           <select
-            className="w-full mt-2 border h-[35px] rounded-[5px]"
+            className="w-full mt-2 border border-sand focus:border-marigold h-[40px] rounded-lg transition-colors"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -135,7 +135,7 @@ const CreateProduct = () => {
             type="text"
             name="tags"
             value={tags}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setTags(e.target.value)}
             placeholder="Enter your product tags..."
           />
@@ -147,7 +147,7 @@ const CreateProduct = () => {
             type="text"
             name="brand"
             value={brand}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setBrand(e.target.value)}
             placeholder="e.g. Qadam"
           />
@@ -156,7 +156,7 @@ const CreateProduct = () => {
         <div>
           <label className="pb-2">For</label>
           <select
-            className="w-full mt-2 border h-[35px] rounded-[5px]"
+            className="w-full mt-2 border border-sand focus:border-marigold h-[40px] rounded-lg transition-colors"
             value={gender}
             onChange={(e) => setGender(e.target.value)}
           >
@@ -173,7 +173,7 @@ const CreateProduct = () => {
             type="text"
             name="material"
             value={material}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setMaterial(e.target.value)}
             placeholder="e.g. Genuine Leather"
           />
@@ -185,7 +185,7 @@ const CreateProduct = () => {
             type="text"
             name="sizes"
             value={sizes}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setSizes(e.target.value)}
             placeholder="Comma separated, e.g. 6,7,8,9,10"
           />
@@ -197,7 +197,7 @@ const CreateProduct = () => {
             type="text"
             name="colors"
             value={colors}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setColors(e.target.value)}
             placeholder="Comma separated, e.g. Black, Tan"
           />
@@ -209,7 +209,7 @@ const CreateProduct = () => {
             type="number"
             name="price"
             value={originalPrice}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setOriginalPrice(e.target.value)}
             placeholder="Enter your product price..."
           />
@@ -223,7 +223,7 @@ const CreateProduct = () => {
             type="number"
             name="price"
             value={discountPrice}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setDiscountPrice(e.target.value)}
             placeholder="Enter your product price with discount..."
           />
@@ -237,7 +237,7 @@ const CreateProduct = () => {
             type="number"
             name="price"
             value={stock}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setStock(e.target.value)}
             placeholder="Enter your product stock..."
           />
@@ -274,7 +274,7 @@ const CreateProduct = () => {
             <input
               type="submit"
               value="Create"
-              className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+              className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             />
           </div>
         </div>

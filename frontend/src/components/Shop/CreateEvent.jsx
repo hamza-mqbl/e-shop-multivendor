@@ -92,7 +92,7 @@ const CreateEvent = () => {
   };
 
   return (
-    <div className="w-[90%] 800px:w-[50%] bg-white shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
+    <div className="w-[90%] 800px:w-[50%] bg-white border border-sand shadow-card rounded-2xl p-5 overflow-y-scroll">
       <h5 className="font-[30px] font-Poppins text-center">Create Event</h5>
       {/* create product form */}
       <form onSubmit={handleSubmit}>
@@ -105,7 +105,7 @@ const CreateEvent = () => {
             type="text"
             name="name"
             value={name}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter your  event product name..."
           />
@@ -122,7 +122,7 @@ const CreateEvent = () => {
             type="text"
             name="description"
             value={description}
-            className="mt-2 appearance-none block w-full pt-2 px-3 border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full pt-2 px-3 border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Enter your event product description..."
           ></textarea>
@@ -133,7 +133,7 @@ const CreateEvent = () => {
             Category <span className="text-red-500">*</span>
           </label>
           <select
-            className="w-full mt-2 border h-[35px] rounded-[5px]"
+            className="w-full mt-2 border border-sand focus:border-marigold h-[40px] rounded-lg transition-colors"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -155,7 +155,7 @@ const CreateEvent = () => {
             type="text"
             name="tags"
             value={tags}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setTags(e.target.value)}
             placeholder="Enter your event product tags..."
           />
@@ -167,7 +167,7 @@ const CreateEvent = () => {
             type="number"
             name="price"
             value={originalPrice}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setOriginalPrice(e.target.value)}
             placeholder="Enter your event product price..."
           />
@@ -181,7 +181,7 @@ const CreateEvent = () => {
             type="number"
             name="price"
             value={discountPrice}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setDiscountPrice(e.target.value)}
             placeholder="Enter your event product price with discount..."
           />
@@ -195,7 +195,7 @@ const CreateEvent = () => {
             type="number"
             name="price"
             value={stock}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             onChange={(e) => setStock(e.target.value)}
             placeholder="Enter your event product stock..."
           />
@@ -211,7 +211,7 @@ const CreateEvent = () => {
             id="start-date"
             value={startDate ? startDate.toISOString().slice(0, 10) : ""}
             onChange={handleStartDateChange}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             placeholder="Enter your event product stock..."
             min={today}
           />
@@ -227,7 +227,7 @@ const CreateEvent = () => {
             id="end_date"
             value={endDate ? endDate.toISOString().slice(0, 10) : ""}
             onChange={handleEndDateChange}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             placeholder="Enter your event product stock..."
             min={minEndDate}
           />
@@ -264,7 +264,7 @@ const CreateEvent = () => {
             <input
               type="submit"
               value="Create"
-              className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
+              className="mt-2 appearance-none block w-full px-3 h-[35px] border border-sand rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-marigold focus:border-marigold sm:text-sm"
             />
           </div>
         </div>
