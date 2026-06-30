@@ -12,7 +12,7 @@ const LoginPage = () => {
     }
   }, []);
   return (
-    <div className="w-full h-screen bg-gray-50">
+    <div className="w-full min-h-screen bg-bone">
       <Login />
     </div>
   );
