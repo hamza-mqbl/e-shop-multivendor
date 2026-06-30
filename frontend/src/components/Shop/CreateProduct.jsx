@@ -26,16 +26,23 @@ const CreateProduct = () => {
   const [sizes, setSizes] = useState("");
   const [colors, setColors] = useState("");
 
+  // clear any stale success/error flag when the page opens
+  useEffect(() => {
+    dispatch({ type: "clearMessages" });
+    dispatch({ type: "clearErrors" });
+  }, [dispatch]);
+
   useEffect(() => {
     if (error) {
       toast.error(error);
+      dispatch({ type: "clearErrors" });
     }
     if (success) {
       toast.success("Product created successfully");
-      // navigate("/dashboard");
-      // window.location.reload();
+      dispatch({ type: "clearMessages" });
+      navigate("/dashboard-products");
     }
-  }, [dispatch, error, success]);
+  }, [dispatch, error, success, navigate]);
   const handleImageChange = (e) => {
     e.preventDefault();
     let files = Array.from(e.target.files);

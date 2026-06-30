@@ -42,20 +42,23 @@ const CreateEvent = () => {
         .slice(0, 10)
     : today;
 
+  // clear any stale success/error flag when the page opens
   useEffect(() => {
+    dispatch({ type: "clearMessages" });
+    dispatch({ type: "clearErrors" });
+  }, [dispatch]);
 
-    // Cleanup function
-    return () => {
-      if (success === true) {
-        toast.success("Event created successfully!");
-        // navigate("/dashboard");
-        // window.location.reload();
-      }
-      if (error) {
-        toast.error(error);
-      }
-    };
-  }, [success,error, dispatch, navigate]);
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: "clearErrors" });
+    }
+    if (success) {
+      toast.success("Event created successfully!");
+      dispatch({ type: "clearMessages" });
+      navigate("/dashboard-events");
+    }
+  }, [dispatch, error, success, navigate]);
 
   const handleImageChange = (e) => {
     let files = Array.from(e.target.files);

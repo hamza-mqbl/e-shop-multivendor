@@ -4,157 +4,47 @@ import { FiPackage, FiShoppingBag } from "react-icons/fi";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { RxDashboard } from "react-icons/rx";
 import { Link } from "react-router-dom";
-import {CiMoneyBill, CiSettings} from "react-icons/ci"
-import {VscNewFile} from "react-icons/vsc"
+import { CiMoneyBill, CiSettings } from "react-icons/ci";
+import { VscNewFile } from "react-icons/vsc";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { HiOutlineReceiptRefund } from "react-icons/hi";
 
+const items = [
+  { id: 1, label: "Dashboard", icon: RxDashboard, url: "/dashboard" },
+  { id: 2, label: "All Orders", icon: FiShoppingBag, url: "/dashboard-orders" },
+  { id: 3, label: "All Products", icon: FiPackage, url: "/dashboard-products" },
+  { id: 4, label: "Create Product", icon: AiOutlineFolder, url: "/dashboard-create-product" },
+  { id: 5, label: "All Events", icon: MdOutlineLocalOffer, url: "/dashboard-events" },
+  { id: 6, label: "Create Event", icon: VscNewFile, url: "/dashboard-create-event" },
+  { id: 7, label: "Withdraw Money", icon: CiMoneyBill, url: "/dashboard-withdraw-money" },
+  { id: 8, label: "Shop Inbox", icon: BiMessageSquareDetail, url: "/dashboard-messages" },
+  { id: 9, label: "Discount Codes", icon: AiOutlineGift, url: "/dashboard-cupouns" },
+  { id: 10, label: "Refunds", icon: HiOutlineReceiptRefund, url: "/dashboard-refunds" },
+  { id: 11, label: "Settings", icon: CiSettings, url: "/settings" },
+];
+
 const DashboardSideBar = ({ active }) => {
   return (
-    <div className="w-full h-[90vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-10">
-      {/* single item */}
-      <div className="w-full flex items-center p-4">
-        <Link to="/dashboard" className="w-full flex items-center">
-          <RxDashboard size={30} color={`${active === 1 ? "#B5462B" : "#555"}`} />
-          <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 1 ? "text-brick" : "text-[#555]"
-            } `}
+    <div className="w-full h-[calc(100vh-80px)] bg-white border-r border-sand overflow-y-auto sticky top-[80px] z-20 py-3">
+      {items.map(({ id, label, icon: Icon, url }) => {
+        const isActive = active === id;
+        return (
+          <Link
+            key={id}
+            to={url}
+            className={`flex items-center gap-3 mx-2 px-3 py-3 rounded-xl mb-1 transition-colors ${
+              isActive
+                ? "bg-marigold/15 text-marigold-dark border-l-2 border-marigold"
+                : "text-espresso/70 hover:bg-bone hover:text-espresso"
+            }`}
           >
-            Dashboard
-          </h5>
-        </Link>
-      </div>
-
-      <div className="w-full flex items-center p-4">
-        <Link to="/dashboard-orders" className="w-full flex items-center">
-          <FiShoppingBag size={30} color={`${active === 2 ? "#B5462B" : "#555"}`} />
-          <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 2 ? "text-brick" : "text-[#555]"
-            } `}
-          >
-            All Orders
-          </h5>
-        </Link>
-      </div>
-
-      <div className="w-full flex items-center p-4">
-        <Link to="/dashboard-products" className="w-full flex items-center">
-          <FiPackage size={30} color={`${active === 3 ? "#B5462B" : "#555"}`} />
-          <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 3 ? "text-brick" : "text-[#555]"
-            } `}
-          >
-            All Products
-          </h5>
-        </Link>
-      </div>
-
-      <div className="w-full flex items-center p-4">
-        <Link to="/dashboard-create-product" className="w-full flex items-center">
-          <AiOutlineFolder size={30} color={`${active === 4 ? "#B5462B" : "#555"}`} />
-          <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 4 ? "text-brick" : "text-[#555]"
-            } `}
-          >
-            Create Product
-          </h5>
-        </Link>
-      </div>
-
-      <div className="w-full flex items-center p-4">
-        <Link to="/dashboard-events" className="w-full flex items-center">
-          <MdOutlineLocalOffer size={30} color={`${active === 5 ? "#B5462B" : "#555"}`} />
-          <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 5 ? "text-brick" : "text-[#555]"
-            } `}
-          >
-            All Events
-          </h5>
-        </Link>
-      </div>
-
-      <div className="w-full flex items-center p-4">
-        <Link to="/dashboard-create-event" className="w-full flex items-center">
-          <VscNewFile size={30} color={`${active === 6 ? "#B5462B" : "#555"}`} />
-          <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 6 ? "text-brick" : "text-[#555]"
-            } `}
-          >
-            Create Events
-          </h5>
-        </Link>
-      </div>
-
-      <div className="w-full flex items-center p-4">
-        <Link to="/dashboard-withdraw-money" className="w-full flex items-center">
-          <CiMoneyBill size={30} color={`${active === 7 ? "#B5462B" : "#555"}`} />
-          <h5
-            className={`hidden 800px:block first-letter:pl-2 text-[18px] font-[400] ${
-              active === 7 ? "text-brick" : "text-[#555]"
-            } `}
-          >
-            Withdraw Money
-          </h5>
-        </Link>
-      </div>
-
-      <div className="w-full flex items-center p-4">
-        <Link to="/dashboard-messages" className="w-full flex items-center">
-          <BiMessageSquareDetail size={30} color={`${active === 8 ? "#B5462B" : "#555"}`} />
-          <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 8 ? "text-brick" : "text-[#555]"
-            } `}
-          >
-            Shop Inbox 
-          </h5>
-        </Link>
-      </div>
-
-      <div className="w-full flex items-center p-4">
-        <Link to="/dashboard-cupouns" className="w-full flex items-center">
-          <AiOutlineGift size={30} color={`${active === 9 ? "#B5462B" : "#555"}`} />
-          <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 9 ? "text-brick" : "text-[#555]"
-            } `}
-          >
-           Discount Codes
-          </h5>
-        </Link>
-      </div>
-
-      <div className="w-full flex items-center p-4">
-        <Link to="/dashboard-refunds" className="w-full flex items-center">
-          <HiOutlineReceiptRefund size={30} color={`${active === 10 ? "#B5462B" : "#555"}`} />
-          <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 10 ? "text-brick" : "text-[#555]"
-            } `}
-          >
-            Refunds
-          </h5>
-        </Link>
-      </div>
-
-      <div className="w-full flex items-center p-4">
-        <Link to="/settings" className="w-full flex items-center">
-          <CiSettings size={30} color={`${active === 11 ? "#B5462B" : "#555"}`} />
-          <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 11 ? "text-brick" : "text-[#555]"
-            } `}
-          >
-        Settings
-          </h5>
-        </Link>
-      </div>
+            <Icon size={22} className="shrink-0" />
+            <span className="hidden 800px:block font-medium text-[15px]">
+              {label}
+            </span>
+          </Link>
+        );
+      })}
     </div>
   );
 };
