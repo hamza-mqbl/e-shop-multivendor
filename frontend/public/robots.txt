@@ -1,3 +1,18 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+
+# Don't index transactional / private pages
+Disallow: /checkout
+Disallow: /payment
+Disallow: /cart
+Disallow: /wishlist
+Disallow: /login
+Disallow: /sign-up
+Disallow: /profile
+Disallow: /dashboard
+Disallow: /shop-login
+Disallow: /shop-create
+
+# Update the host below to your production domain on deploy
+Sitemap: https://qadam.pk/sitemap.xml
