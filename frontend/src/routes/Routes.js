@@ -20,6 +20,7 @@ import TrackOrderPage from "../pages/TrackOrderPage.jsx";
 import ShopSettingsPage from "../pages/ShopSettingsPage.jsx";
 import UserInbox from "../pages/UserInbox.jsx";
 import CartPage from "../pages/CartPage.jsx";
+import WishlistPage from "../pages/WishlistPage.jsx";
 
 export {
   LoginPage,
@@ -42,5 +43,6 @@ export {
   TrackOrderPage,
   ShopSettingsPage,
   UserInbox,
-  CartPage
+  CartPage,
+  WishlistPage
 };

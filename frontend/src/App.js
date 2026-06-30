@@ -30,6 +30,7 @@ import {
   ShopSettingsPage,
   UserInbox,
   CartPage,
+  WishlistPage,
 } from "./routes/Routes.js";
 import ProtectedRoute from "./routes/ProtectedRoute.js";
 import ScrollToTop from "./components/Route/ScrollToTop.jsx";
@@ -107,6 +108,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="sign-up" element={<SignupPage />} />
             <Route

@@ -7,7 +7,6 @@ import {
   AiOutlineSearch,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
-import WishList from "../wishlist/WishList.jsx";
 import { CgProfile } from "react-icons/cg";
 import { IoIosArrowDown } from "react-icons/io";
 import { BiMenuAltLeft } from "react-icons/bi";
@@ -42,7 +41,6 @@ const Header = ({ activeHeading }) => {
   const [active, setActive] = useState(false);
   const [dropDown, setDropDown] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
-  const [openWishList, setOpenWishList] = useState(false);
   const [open, setOpen] = useState(false);
 
   const handleSearchChange = (e) => {
@@ -136,15 +134,10 @@ const Header = ({ activeHeading }) => {
               </button>
 
               {/* wishlist */}
-              <button
-                type="button"
-                onClick={() => setOpenWishList(true)}
-                className={iconBtn}
-                title="Wishlist"
-              >
+              <Link to="/wishlist" className={iconBtn} title="Wishlist">
                 <AiOutlineHeart size={24} />
                 <span className={badge}>{wishlist && wishlist.length}</span>
-              </button>
+              </Link>
 
               {/* cart */}
               <Link to="/cart" className={iconBtn} title="Cart">
@@ -171,8 +164,6 @@ const Header = ({ activeHeading }) => {
 
         </div>
 
-        {/* popups */}
-        {openWishList ? <WishList setOpenWishList={setOpenWishList} /> : null}
       </div>
 
       {/* ── mobile header ── */}
@@ -202,7 +193,6 @@ const Header = ({ activeHeading }) => {
               </span>
             </Link>
           </div>
-          {openWishList ? <WishList setOpenWishList={setOpenWishList} /> : null}
         </div>
 
         {/* mobile drawer */}
@@ -211,15 +201,16 @@ const Header = ({ activeHeading }) => {
             <div className="fixed w-[72%] bg-white h-screen top-0 left-0 z-10 overflow-y-scroll">
               <div className="w-full justify-between flex pr-3">
                 <div>
-                  <div
-                    className="relative mr-[15px]"
-                    onClick={() => setOpenWishList(true)}
+                  <Link
+                    to="/wishlist"
+                    className="relative mr-[15px] inline-block"
+                    onClick={() => setOpen(false)}
                   >
                     <AiOutlineHeart size={28} className="mt-5 ml-3 text-espresso" />
                     <span className="absolute right-0 top-3 rounded-full bg-brick w-[18px] h-[18px] flex items-center justify-center text-white font-mono text-[11px]">
                       {wishlist && wishlist.length}
                     </span>
-                  </div>
+                  </Link>
                 </div>
                 <RxCross1
                   size={28}
