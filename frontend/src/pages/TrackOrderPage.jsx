@@ -5,7 +5,7 @@ import TrackOrder from "../components/Profile/TrackOrder.jsx";
 
 const TrackOrderPage = () => {
     return (
-      <div>
+      <div className="bg-bone min-h-screen">
           <Header />
           <TrackOrder />
           <Footer />

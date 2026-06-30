@@ -122,6 +122,31 @@ button:focus-visible,
   animation-play-state: paused;
 }
 
+/* Material-UI DataGrid — match the Qadam brand */
+.MuiDataGrid-root {
+  border: none !important;
+  font-family: "Inter", sans-serif !important;
+  color: #241a14 !important;
+}
+.MuiDataGrid-columnsContainer,
+.MuiDataGrid-columnHeaders {
+  background: #fbf8f3 !important;
+  border-bottom: 1px solid #e7ddce !important;
+}
+.MuiDataGrid-columnHeaderTitle {
+  font-weight: 600 !important;
+  color: #241a14 !important;
+}
+.MuiDataGrid-cell {
+  border-bottom: 1px solid #f0eae0 !important;
+}
+.MuiDataGrid-row:hover {
+  background: #fbf8f3 !important;
+}
+.MuiDataGrid-footerContainer {
+  border-top: 1px solid #e7ddce !important;
+}
+
 /* order-status colours in the account data tables */
 .greenColor {
   color: #2e7d32;

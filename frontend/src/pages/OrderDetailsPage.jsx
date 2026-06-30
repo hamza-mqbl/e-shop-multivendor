@@ -4,7 +4,7 @@ import Footer from '../components/layout/Footer'
 import UserOrderDetails from '../components/UserOrderDetails.jsx'
 const OrderDetailsPage = () => {
   return (
-    <div>
+    <div className="bg-bone min-h-screen">
         <Header/>
         <UserOrderDetails/>
         <Footer/>
