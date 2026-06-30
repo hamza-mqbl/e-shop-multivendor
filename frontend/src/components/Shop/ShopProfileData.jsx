@@ -60,7 +60,7 @@ const ShopProfileData = ({ isOwner }) => {
           {isOwner && (
             <div>
               <Link to="/dashboard">
-                <div className={`${styles.button} !rounded-[4px] h-[42px]`}>
+                <div className={`${styles.button} !rounded-xl h-[42px]`}>
                   <span className="text-[#fff]">Go Dashboard</span>
                 </div>
               </Link>
@@ -113,11 +113,13 @@ const ShopProfileData = ({ isOwner }) => {
                 />
                 <div className="pl-2">
                   <div className="flex w-full items-center">
-                    <h1 className="font-[600] pr-2">{item.user.name}</h1>
+                    <h1 className="font-medium text-espresso pr-2">
+                      {item.user.name}
+                    </h1>
                     <Rating ratings={item.rating} />
                   </div>
-                  <p className="font-[400] text-[#000000a7]">{item?.comment}</p>
-                  <p className="text-[#000000a7] text-[14px]">{"2days ago"}</p>
+                  <p className="text-espresso/80 mt-1">{item?.comment}</p>
+                  <p className="text-clay text-[13px] mt-0.5">2 days ago</p>
                 </div>
               </div>
             ))}
