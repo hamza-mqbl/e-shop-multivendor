@@ -34,7 +34,7 @@ const DropDown = ({ categoriesData, setDropDown }) => {
     window.location.reload();
   };
   return (
-    <div className="pb-2 w-[270px] bg-white border border-sand absolute z-30 rounded-b-md shadow-card">
+    <div className="pb-2 w-[270px] bg-white border border-sand absolute right-0 top-full mt-2 z-40 rounded-xl shadow-card overflow-hidden">
       {categoriesData &&
         categoriesData.map((i, index) => {
           const Icon = categoryIcons[i.title] || GiConverseShoe;
