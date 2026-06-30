@@ -106,7 +106,7 @@ const CartPage = () => {
 
             {/* summary */}
             <div className="w-full lg:w-[360px] shrink-0 mt-6 lg:mt-0">
-              <div className="bg-white border border-sand rounded-2xl shadow-card p-5 lg:sticky lg:top-24">
+              <div className="bg-white border border-sand rounded-2xl shadow-card p-5">
                 <h2 className="font-display text-[18px] font-semibold text-espresso mb-4">
                   Order summary
                 </h2>

@@ -162,7 +162,7 @@ const Payment = () => {
           cashOnDeliveryHandler={cashOnDeliveryHandler}
         />
       </div>
-      <div className="w-full 800px:w-[340px] shrink-0 800px:mt-0 mt-6 800px:sticky 800px:top-24">
+      <div className="w-full 800px:w-[340px] shrink-0 800px:mt-0 mt-6">
         <CartData orderData={orderData} />
       </div>
     </div>
