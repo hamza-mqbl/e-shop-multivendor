@@ -151,7 +151,7 @@ const Payment = () => {
 
   return (
     <div className="w-full block 800px:flex gap-6 items-start">
-      <div className="w-full 800px:w-[65%]">
+      <div className="flex-1 min-w-0">
         <PaymentInfo
           user={user}
           open={open}
@@ -162,7 +162,7 @@ const Payment = () => {
           cashOnDeliveryHandler={cashOnDeliveryHandler}
         />
       </div>
-      <div className="w-full 800px:w-[35%] 800px:mt-0 mt-6">
+      <div className="w-full 800px:w-[340px] shrink-0 800px:mt-0 mt-6 800px:sticky 800px:top-24">
         <CartData orderData={orderData} />
       </div>
     </div>
@@ -200,10 +200,10 @@ const PaymentInfo = ({
   return (
     <div className="w-full bg-white border border-sand shadow-card rounded-2xl p-5 800px:p-6">
       {/* card */}
-      <div>
+      <div className="border-b border-sand">
         <button
           type="button"
-          className="flex items-center gap-3 w-full pb-4 border-b border-sand"
+          className="flex items-center gap-3 w-full py-4"
           onClick={() => setSelect(1)}
         >
           <Radio selected={select === 1} />
@@ -213,7 +213,7 @@ const PaymentInfo = ({
         </button>
 
         {select === 1 ? (
-          <div className="w-full pt-4 pb-5 border-b border-sand">
+          <div className="w-full pb-5">
             <form className="w-full" onSubmit={paymentHandler}>
               <div className="w-full flex gap-4 pb-3">
                 <div className="w-[50%]">
@@ -266,10 +266,10 @@ const PaymentInfo = ({
       </div>
 
       {/* paypal */}
-      <div className="mt-5">
+      <div className="border-b border-sand">
         <button
           type="button"
-          className="flex items-center gap-3 w-full pb-4 border-b border-sand"
+          className="flex items-center gap-3 w-full py-4"
           onClick={() => setSelect(2)}
         >
           <Radio selected={select === 2} />
@@ -279,7 +279,7 @@ const PaymentInfo = ({
         </button>
 
         {select === 2 ? (
-          <div className="w-full pt-4 pb-5 border-b border-sand">
+          <div className="w-full pb-5">
             <button
               type="button"
               className={payBtn}
@@ -315,10 +315,10 @@ const PaymentInfo = ({
       </div>
 
       {/* cash on delivery */}
-      <div className="mt-5">
+      <div>
         <button
           type="button"
-          className="flex items-center gap-3 w-full pb-4 border-b border-sand"
+          className="flex items-center gap-3 w-full py-4"
           onClick={() => setSelect(3)}
         >
           <Radio selected={select === 3} />
@@ -328,7 +328,7 @@ const PaymentInfo = ({
         </button>
 
         {select === 3 ? (
-          <div className="w-full pt-4">
+          <div className="w-full pb-4">
             <p className="text-[14px] text-clay mb-3">
               Pay in cash when your order arrives at your door.
             </p>

@@ -103,7 +103,7 @@ const Checkout = () => {
   return (
     <div className="w-full">
       <div className="block 800px:flex gap-6 items-start">
-        <div className="w-full 800px:w-[65%]">
+        <div className="flex-1 min-w-0">
           <ShippingInfo
             user={user}
             country={country}
@@ -120,7 +120,7 @@ const Checkout = () => {
             setZipCode={setZipCode}
           />
         </div>
-        <div className="w-full 800px:w-[35%] 800px:mt-0 mt-6">
+        <div className="w-full 800px:w-[340px] shrink-0 800px:mt-0 mt-6 800px:sticky 800px:top-24">
           <CartData
             handleSubmit={handleSubmit}
             totalPrice={totalPrice}
