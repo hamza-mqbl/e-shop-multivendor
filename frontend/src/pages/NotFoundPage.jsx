@@ -2,10 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
+import Seo from "../components/Seo.jsx";
 import { FaShoePrints } from "react-icons/fa";
 
 const NotFoundPage = () => (
   <div className="bg-bone min-h-screen flex flex-col">
+    <Seo title="Page not found" noIndex />
     <Header />
     <div className="flex-1 flex flex-col items-center justify-center text-center px-4 py-20">
       <FaShoePrints className="text-marigold text-[56px] -rotate-12 mb-4" />

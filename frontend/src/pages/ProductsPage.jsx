@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import ProductCard from "../components/Route/ProductCard/ProductCard";
+import Seo from "../components/Seo.jsx";
 import styles from "../styles/styles";
 
 const ProductsPage = () => {
@@ -35,6 +36,15 @@ const ProductsPage = () => {
 
   return (
     <div className="bg-bone min-h-screen">
+      <Seo
+        title={categoryData ? `${categoryData} shoes` : "All shoes"}
+        path={categoryData ? `/products?category=${categoryData}` : "/products"}
+        description={
+          categoryData
+            ? `Shop ${categoryData} at Qadam — handcrafted leather shoes with cash on delivery across Pakistan.`
+            : "Browse the full Qadam collection — sneakers, formal shoes, heels, chappals and more, with cash on delivery across Pakistan."
+        }
+      />
       <Header activeHeading={2} />
       <div className={`${styles.section} py-8 800px:py-12`}>
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">

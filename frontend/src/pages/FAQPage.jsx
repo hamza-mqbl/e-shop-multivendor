@@ -3,6 +3,7 @@ import Footer from "../components/layout/Footer";
 import Header from "../components/layout/Header";
 import styles from "../styles/styles";
 import { FiMinus, FiPlus } from "react-icons/fi";
+import Seo from "../components/Seo.jsx";
 
 const faqs = [
   {
@@ -38,6 +39,20 @@ const faqs = [
 const FAQPage = () => {
   return (
     <div className="bg-bone min-h-screen">
+      <Seo
+        title="FAQ"
+        path="/faq"
+        description="Answers about Qadam sizing, exchanges, delivery, payment and order tracking."
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }}
+      />
       <Header activeHeading={4} />
       <Faq />
       <Footer />

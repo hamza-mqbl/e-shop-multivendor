@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { AiOutlineHeart, AiOutlineDelete } from "react-icons/ai";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
+import Seo from "../components/Seo.jsx";
 import styles from "../styles/styles";
 import { addToCart } from "../redux/actions/cart";
 import { removeFromWishList } from "../redux/actions/wishlist";
@@ -43,6 +44,7 @@ const WishlistPage = () => {
 
   return (
     <div className="bg-bone min-h-screen">
+      <Seo title="Your wishlist" path="/wishlist" noIndex />
       <Header />
       <div className={`${styles.section} py-8 800px:py-12`}>
         <h1 className="font-display text-[28px] font-semibold text-espresso mb-6">

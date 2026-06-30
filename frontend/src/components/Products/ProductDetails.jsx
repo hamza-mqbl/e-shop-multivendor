@@ -18,6 +18,7 @@ import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
 import InnerImageZoom from "react-inner-image-zoom";
 import "react-inner-image-zoom/lib/styles.min.css";
+import Seo from "../Seo.jsx";
 
 // Request a higher-resolution Unsplash variant for the zoom overlay
 const hiRes = (url) => (url ? url.replace(/w=\d+/, "w=1600") : url);
@@ -146,6 +147,46 @@ const ProductDetails = ({ data }) => {
     <div className="bg-bone">
       {data ? (
         <div className={`${styles.section} w-[90%] 800px:w-[80%]`}>
+          <Seo
+            title={data.name}
+            path={`/product/${data._id}`}
+            type="product"
+            description={
+              (data.description || "").slice(0, 160) ||
+              `Buy ${data.name} at Qadam — handcrafted leather shoes with cash on delivery.`
+            }
+            image={data.images && data.images[0]?.url}
+            jsonLd={{
+              "@context": "https://schema.org",
+              "@type": "Product",
+              name: data.name,
+              image: data.images?.map((i) => i.url),
+              description: data.description,
+              brand: { "@type": "Brand", name: data.brand || "Qadam" },
+              category: data.category,
+              offers: {
+                "@type": "Offer",
+                price: data.discountPrice,
+                priceCurrency: "PKR",
+                availability:
+                  data.stock > 0
+                    ? "https://schema.org/InStock"
+                    : "https://schema.org/OutOfStock",
+                url: `${
+                  typeof window !== "undefined" ? window.location.origin : ""
+                }/product/${data._id}`,
+              },
+              ...(data.reviews && data.reviews.length
+                ? {
+                    aggregateRating: {
+                      "@type": "AggregateRating",
+                      ratingValue: averageRating || data.ratings || 5,
+                      reviewCount: data.reviews.length,
+                    },
+                  }
+                : {}),
+            }}
+          />
           {/* breadcrumb */}
           <nav className="flex items-center gap-2 text-[13px] text-clay py-5">
             <Link to="/" className="hover:text-espresso">

@@ -4,12 +4,18 @@ import EventCard from "../components/Events/EventCard";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import styles from "../styles/styles";
+import Seo from "../components/Seo.jsx";
 
 const EventsPage = () => {
   const { allEvents } = useSelector((state) => state.events);
 
   return (
     <div className="bg-bone min-h-screen">
+      <Seo
+        title="Offers"
+        path="/events"
+        description="Limited-time deals on Qadam shoes — save on sneakers, formal shoes and heels while stocks last."
+      />
       <Header activeHeading={3} />
       <div className={`${styles.section} py-8 800px:py-12`}>
         <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-marigold-dark">

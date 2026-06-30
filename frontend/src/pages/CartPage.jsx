@@ -7,6 +7,7 @@ import { AiOutlineHeart, AiOutlineDelete } from "react-icons/ai";
 import { IoBagHandleOutline } from "react-icons/io5";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
+import Seo from "../components/Seo.jsx";
 import styles from "../styles/styles";
 import { addToCart, removeFromCart } from "../redux/actions/cart";
 import { addToWishList } from "../redux/actions/wishlist";
@@ -46,6 +47,7 @@ const CartPage = () => {
 
   return (
     <div className="bg-bone min-h-screen">
+      <Seo title="Your cart" path="/cart" noIndex />
       <Header />
       <div className={`${styles.section} py-8 800px:py-12`}>
         <h1 className="font-display text-[28px] font-semibold text-espresso mb-6">

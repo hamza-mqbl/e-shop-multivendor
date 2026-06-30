@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Header from "../components/layout/Header";
 import ProductCard from "../components/Route/ProductCard/ProductCard";
+import Seo from "../components/Seo.jsx";
 import styles from "../styles/styles";
 import Footer from "../components/layout/Footer";
 
@@ -19,6 +20,11 @@ const BestSellingPage = () => {
 
   return (
     <div className="bg-bone min-h-screen">
+      <Seo
+        title="Best sellers"
+        path="/best-selling"
+        description="The shoes Qadam shoppers love most — our best-selling sneakers, formal shoes and heels."
+      />
       <Header activeHeading={0} />
       <div className={`${styles.section} py-8 800px:py-12`}>
         <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-marigold-dark">
