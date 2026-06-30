@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
 import { categoriesData } from "../../static/data";
@@ -61,6 +61,13 @@ const Header = ({ activeHeading }) => {
   window.addEventListener("scroll", () => {
     setActive(window.scrollY > 70);
   });
+
+  // close the search modal on Escape
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && setOpenSearch(false);
+    if (openSearch) window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [openSearch]);
 
   // shared icon-button style for the dark bar
   const iconBtn =
@@ -169,57 +176,6 @@ const Header = ({ activeHeading }) => {
             </div>
           </div>
 
-          {/* search panel */}
-          {openSearch && (
-            <div className="absolute left-0 top-full w-full bg-white border-b border-sand shadow-card">
-              <div className={`${styles.section} py-4`}>
-                <div className="relative">
-                  <AiOutlineSearch
-                    size={22}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-clay"
-                  />
-                  <input
-                    autoFocus
-                    type="text"
-                    placeholder="Search shoes…"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    className="w-full h-[48px] pl-11 pr-10 bg-bone border border-sand focus:border-marigold rounded-xl transition-colors"
-                  />
-                  <RxCross1
-                    size={18}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-clay cursor-pointer"
-                    onClick={() => setOpenSearch(false)}
-                  />
-                </div>
-                {searchData && searchData.length > 0 && (
-                  <div className="mt-3 max-h-[50vh] overflow-y-auto">
-                    {searchData.map((i, index) => (
-                      <Link
-                        to={`/product/${i._id}`}
-                        key={index}
-                        onClick={() => setOpenSearch(false)}
-                      >
-                        <div className="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-bone transition-colors">
-                          <img
-                            src={i.images && i.images[0]?.url}
-                            alt=""
-                            className="w-10 h-10 rounded object-cover bg-bone"
-                          />
-                          <span className="text-espresso">{i.name}</span>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-                {searchData && searchData.length === 0 && searchTerm && (
-                  <p className="mt-3 text-clay text-sm px-2">
-                    No shoes match “{searchTerm}”.
-                  </p>
-                )}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* popups */}
@@ -345,6 +301,106 @@ const Header = ({ activeHeading }) => {
           </div>
         )}
       </div>
+
+      {/* ── search modal (premium overlay) ── */}
+      {openSearch && (
+        <div
+          className="fixed inset-0 z-[70] bg-espresso/40 backdrop-blur-sm px-4"
+          onClick={() => setOpenSearch(false)}
+        >
+          <div
+            className="mx-auto mt-20 800px:mt-24 w-full max-w-[640px]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="bg-white rounded-2xl shadow-cardHover border border-sand overflow-hidden">
+              <div className="relative border-b border-sand">
+                <AiOutlineSearch
+                  size={22}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-clay"
+                />
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder="Search shoes…"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  className="w-full h-[58px] pl-12 pr-12 text-[16px] text-espresso outline-none bg-transparent"
+                />
+                <button
+                  type="button"
+                  onClick={() => setOpenSearch(false)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full hover:bg-bone flex items-center justify-center transition-colors"
+                  title="Close"
+                >
+                  <RxCross1 size={16} className="text-clay" />
+                </button>
+              </div>
+
+              <div className="max-h-[58vh] overflow-y-auto p-2">
+                {searchData &&
+                  searchData.length > 0 &&
+                  searchData.map((i, index) => (
+                    <Link
+                      to={`/product/${i._id}`}
+                      key={index}
+                      onClick={() => setOpenSearch(false)}
+                    >
+                      <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-bone transition-colors">
+                        <img
+                          src={i.images && i.images[0]?.url}
+                          alt=""
+                          className="w-12 h-12 rounded-lg object-cover bg-bone shrink-0"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="text-espresso font-medium truncate">
+                            {i.name}
+                          </p>
+                          <p className="text-[12px] text-clay">{i.category}</p>
+                        </div>
+                        <span className="font-mono text-[14px] text-espresso shrink-0">
+                          Rs {i.discountPrice}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+
+                {searchTerm && searchData && searchData.length === 0 && (
+                  <p className="text-clay text-sm p-5 text-center">
+                    No shoes match “{searchTerm}”.
+                  </p>
+                )}
+
+                {!searchTerm && (
+                  <div className="p-3">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-clay mb-2">
+                      Popular
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        "Sneakers",
+                        "Men's Formal",
+                        "Women's Heels",
+                        "Chappals",
+                        "Kids",
+                      ].map((c) => (
+                        <Link
+                          to={`/products?category=${c}`}
+                          key={c}
+                          onClick={() => setOpenSearch(false)}
+                        >
+                          <span className="inline-block px-3 py-1.5 rounded-full bg-bone border border-sand text-espresso text-[13px] hover:border-marigold transition-colors">
+                            {c}
+                          </span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
