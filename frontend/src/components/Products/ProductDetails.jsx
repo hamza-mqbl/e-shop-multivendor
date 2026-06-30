@@ -14,6 +14,7 @@ import { addToCart } from "../../redux/actions/cart";
 import { backend_url, server } from "../../server";
 import Rating from "./Rating";
 import { getAllProductsShop } from "../../redux/actions/product";
+import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
 import InnerImageZoom from "react-inner-image-zoom";
 import "react-inner-image-zoom/lib/styles.min.css";
@@ -45,6 +46,7 @@ const ProductDetails = ({ data }) => {
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
   const [selectedSize, setSelectedSize] = useState(null);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -279,6 +281,7 @@ const ProductDetails = ({ data }) => {
                     </h4>
                     <button
                       type="button"
+                      onClick={() => setShowSizeGuide(true)}
                       className="text-[13px] text-marigold-dark hover:text-espresso transition-colors"
                     >
                       Size guide
@@ -399,6 +402,69 @@ const ProductDetails = ({ data }) => {
             totalReviewsLength={totalReviewsLength}
             averageRating={averageRating}
           />
+
+          {/* size guide modal */}
+          {showSizeGuide && (
+            <div
+              className="fixed inset-0 z-[70] bg-espresso/40 backdrop-blur-sm flex items-center justify-center px-4"
+              onClick={() => setShowSizeGuide(false)}
+            >
+              <div
+                className="bg-white rounded-2xl shadow-cardHover border border-sand w-full max-w-[460px] max-h-[80vh] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between px-5 py-4 border-b border-sand">
+                  <h3 className="font-display font-semibold text-espresso">
+                    Size guide{" "}
+                    <span className="font-sans text-[12px] text-clay">
+                      (UK · EU · US · cm)
+                    </span>
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setShowSizeGuide(false)}
+                    className="w-8 h-8 rounded-full hover:bg-bone flex items-center justify-center"
+                  >
+                    <RxCross1 className="text-clay" size={16} />
+                  </button>
+                </div>
+                <div className="p-5">
+                  <p className="text-[13px] text-clay mb-4">
+                    Approximate conversions. If you're between sizes, we
+                    recommend going half a size up.
+                  </p>
+                  <table className="w-full text-[14px]">
+                    <thead>
+                      <tr className="text-clay text-left border-b border-sand">
+                        <th className="py-2 font-medium">UK</th>
+                        <th className="py-2 font-medium">EU</th>
+                        <th className="py-2 font-medium">US</th>
+                        <th className="py-2 font-medium">CM</th>
+                      </tr>
+                    </thead>
+                    <tbody className="font-mono text-espresso">
+                      {[
+                        ["5", "38", "6", "24"],
+                        ["6", "39", "7", "25"],
+                        ["7", "41", "8", "26"],
+                        ["8", "42", "9", "27"],
+                        ["9", "43", "10", "28"],
+                        ["10", "44", "11", "29"],
+                        ["11", "46", "12", "30"],
+                      ].map((r) => (
+                        <tr key={r[0]} className="border-b border-sand/60">
+                          <td className="py-2">{r[0]}</td>
+                          <td className="py-2">{r[1]}</td>
+                          <td className="py-2">{r[2]}</td>
+                          <td className="py-2">{r[3]}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div className="h-[40vh] flex items-center justify-center text-clay">
