@@ -5,7 +5,13 @@ import styles from "../../styles/styles";
 import { Country, State } from "country-state-city";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { backend_url, server } from "../../server";
+import { server } from "../../server";
+
+const FREE_SHIPPING_OVER = 5000;
+const FLAT_SHIPPING = 200;
+const selectCls =
+  "w-full mt-1 h-[44px] px-3 bg-white border border-sand focus:border-marigold rounded-lg transition-colors";
+const labelCls = "block pb-1 text-[14px] font-medium text-espresso";
 
 const Checkout = () => {
   const { user } = useSelector((state) => state.user);
@@ -25,6 +31,15 @@ const Checkout = () => {
   }, []);
   const navigate = useNavigate();
 
+  const subTotalPrice = cart.reduce(
+    (acc, item) => acc + item.qty * item.discountPrice,
+    0
+  );
+  const shipping =
+    subTotalPrice === 0 || subTotalPrice >= FREE_SHIPPING_OVER
+      ? 0
+      : FLAT_SHIPPING;
+
   const paymentSubmit = () => {
     if (
       address1 === "" ||
@@ -33,15 +48,9 @@ const Checkout = () => {
       country === "" ||
       city === ""
     ) {
-      toast.error("please choose your deliverd address");
+      toast.error("Please choose your delivery address");
     } else {
-      const shippingAddress = {
-        address1,
-        address2,
-        country,
-        zipCode,
-        city,
-      };
+      const shippingAddress = { address1, address2, country, zipCode, city };
       const orderData = {
         cart,
         totalPrice,
@@ -51,32 +60,21 @@ const Checkout = () => {
         shippingAddress,
         user,
       };
-      // update the local storage with updated order array
       localStorage.setItem("latestOrder", JSON.stringify(orderData));
       navigate("/payment");
     }
   };
-  const subTotalPrice = cart.reduce(
-    (acc, item) => acc + item.qty + item.discountPrice,
-    0
-  );
-  const shipping = subTotalPrice * 0.1;
-  // handle submit for apply coupon code
+
+  // apply coupon code
   const handleSubmit = async (e) => {
     e.preventDefault();
     const name = couponCode;
-    console.log(name);
-    console.log(cart);
-
     await axios.get(`${server}/coupon/get-coupon-value/${name}`).then((res) => {
       const shopId = res.data.couponCode?.shop;
       const couponValue = res.data.couponCode?.value;
-      console.log(shopId);
-      console.log(res.data.couponCode);
       if (res.data.couponCode !== null) {
         const isCouponValid =
           cart && cart.filter((item) => item.shopId === shopId);
-        console.log("isCouponValid", isCouponValid);
         if (isCouponValid.length === 0) {
           toast.error("Coupon code is not valid for this shop");
           setCouponCode("");
@@ -85,12 +83,9 @@ const Checkout = () => {
             (acc, item) => acc + item.qty * item.discountPrice,
             0
           );
-          console.log(eligiblePrice);
-          const discountPrice = (eligiblePrice * couponValue) / 100;
-          setDiscountPrice(discountPrice);
+          const discount = (eligiblePrice * couponValue) / 100;
+          setDiscountPrice(discount);
           setCouponCodeData(res.data.couponCode);
-          console.log("discountPrice", discountPrice);
-          console.log("couponValue", couponValue);
         }
       }
       if (res.data.couponCode === null) {
@@ -101,13 +96,13 @@ const Checkout = () => {
   };
 
   const discountPercentage = couponCodeData ? discountPrice : "";
-  console.log("discountPercentage", discountPercentage);
   const totalPrice = couponCodeData
     ? (subTotalPrice + shipping - discountPercentage).toFixed(2)
     : (subTotalPrice + shipping).toFixed(2);
+
   return (
-    <div className="w-full flex flex-col items-center py-8">
-      <div className="w-[90%] 1000px:w-[70%] block 800px:flex">
+    <div className="w-full">
+      <div className="block 800px:flex gap-6 items-start">
         <div className="w-full 800px:w-[65%]">
           <ShippingInfo
             user={user}
@@ -125,7 +120,7 @@ const Checkout = () => {
             setZipCode={setZipCode}
           />
         </div>
-        <div className="w-full 800px:w-[35%] 800px:mt-0 mt-8">
+        <div className="w-full 800px:w-[35%] 800px:mt-0 mt-6">
           <CartData
             handleSubmit={handleSubmit}
             totalPrice={totalPrice}
@@ -135,13 +130,14 @@ const Checkout = () => {
             setCouponCode={setCouponCode}
             discountPercentage={discountPercentage}
           />
+          <button
+            type="button"
+            className="w-full h-[52px] mt-4 bg-marigold hover:bg-marigold-dark text-espresso font-display font-medium rounded-xl transition-colors"
+            onClick={paymentSubmit}
+          >
+            Go to payment
+          </button>
         </div>
-      </div>
-      <div
-        className={`${styles.button} w-[150px] 800px:w-[280px] mt-10`}
-        onClick={paymentSubmit}
-      >
-        <h5 className="text-white">Go to Payment</h5>
       </div>
     </div>
   );
@@ -163,64 +159,63 @@ const ShippingInfo = ({
   setZipCode,
 }) => {
   return (
-    <div className="w-full 800px:w-[95%] bg-white rounded-md p-5 pb-8">
-      <h5 className="text-[18px] font-[500]">Shipping Address</h5>
-      <br />
+    <div className="w-full bg-white border border-sand shadow-card rounded-2xl p-5 800px:p-6">
+      <h5 className="font-display text-[18px] font-semibold text-espresso mb-4">
+        Shipping address
+      </h5>
       <form>
-        <div className="w-full flex pb-3">
+        <div className="w-full flex gap-4 pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Full Name</label>
+            <label className={labelCls}>Full name</label>
             <input
               type="text"
-              value={user && user.name}
+              defaultValue={user && user.name}
               required
-              className={`${styles.input} !w-[95%]`}
+              className={styles.input}
             />
           </div>
           <div className="w-[50%]">
-            <label className="block pb-2">Email Address</label>
+            <label className={labelCls}>Email address</label>
             <input
               type="email"
-              value={user && user.email}
+              defaultValue={user && user.email}
               required
-              className={`${styles.input}`}
+              className={styles.input}
             />
           </div>
         </div>
 
-        <div className="w-full flex pb-3">
+        <div className="w-full flex gap-4 pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Phone Number</label>
+            <label className={labelCls}>Phone number</label>
             <input
               type="number"
               required
-              value={user && user.phoneNumber}
-              className={`${styles.input} !w-[95%]`}
+              defaultValue={user && user.phoneNumber}
+              className={styles.input}
             />
           </div>
           <div className="w-[50%]">
-            <label className="block pb-2">Zip Code</label>
+            <label className={labelCls}>Zip code</label>
             <input
               type="number"
-              value={zipCode}
+              value={zipCode || ""}
               onChange={(e) => setZipCode(e.target.value)}
               required
-              className={`${styles.input}`}
+              className={styles.input}
             />
           </div>
         </div>
 
-        <div className="w-full flex pb-3">
+        <div className="w-full flex gap-4 pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Country</label>
+            <label className={labelCls}>Country</label>
             <select
-              className="w-[95%] border h-[40px] rounded-[5px]"
+              className={selectCls}
               value={country}
               onChange={(e) => setCountry(e.target.value)}
             >
-              <option className="block pb-2" value="">
-                Choose your country
-              </option>
+              <option value="">Choose your country</option>
               {Country &&
                 Country.getAllCountries().map((item) => (
                   <option key={item.isoCode} value={item.isoCode}>
@@ -230,15 +225,13 @@ const ShippingInfo = ({
             </select>
           </div>
           <div className="w-[50%]">
-            <label className="block pb-2">City</label>
+            <label className={labelCls}>City / region</label>
             <select
-              className="w-[95%] border h-[40px] rounded-[5px]"
+              className={selectCls}
               value={city}
               onChange={(e) => setCity(e.target.value)}
             >
-              <option className="block pb-2" value="">
-                Choose your City
-              </option>
+              <option value="">Choose your city</option>
               {State &&
                 State.getStatesOfCountry(country).map((item) => (
                   <option key={item.isoCode} value={item.isoCode}>
@@ -249,45 +242,49 @@ const ShippingInfo = ({
           </div>
         </div>
 
-        <div className="w-full flex pb-3">
+        <div className="w-full flex gap-4 pb-1">
           <div className="w-[50%]">
-            <label className="block pb-2">Address1</label>
+            <label className={labelCls}>Address line 1</label>
             <input
-              type="address"
+              type="text"
               required
               value={address1}
               onChange={(e) => setAddress1(e.target.value)}
-              className={`${styles.input} !w-[95%]`}
+              className={styles.input}
             />
           </div>
           <div className="w-[50%]">
-            <label className="block pb-2">Address2</label>
+            <label className={labelCls}>Address line 2</label>
             <input
-              type="address"
+              type="text"
               value={address2}
               onChange={(e) => setAddress2(e.target.value)}
               required
-              className={`${styles.input}`}
+              className={styles.input}
             />
           </div>
         </div>
-
-        <div></div>
       </form>
+
+      <hr className="seam my-5" />
+
       <h5
-        className="text-[18px] cursor-pointer inline-block"
+        className="text-[14px] font-medium text-marigold-dark cursor-pointer inline-block hover:text-espresso transition-colors"
         onClick={() => setUserInfo(!userInfo)}
       >
-        Choose From saved address
+        Choose from saved addresses
       </h5>
       {userInfo && (
-        <div>
+        <div className="mt-3 space-y-2">
           {user &&
             user.addresses.map((item, index) => (
-              <div className="w-full flex mt-1">
+              <label
+                className="w-full flex items-center gap-3 cursor-pointer text-espresso"
+                key={index}
+              >
                 <input
                   type="checkbox"
-                  className="mr-3"
+                  className="accent-marigold w-4 h-4"
                   value={item.addressType}
                   onClick={() =>
                     setAddress1(item.address1) ||
@@ -297,8 +294,8 @@ const ShippingInfo = ({
                     setCity(item.city)
                   }
                 />
-                <h2>{item.addressType}</h2>
-              </div>
+                {item.addressType}
+              </label>
             ))}
         </div>
       )}
@@ -316,38 +313,46 @@ const CartData = ({
   discountPercentage,
 }) => {
   return (
-    <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
-      <div className="flex justify-between">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">subtotal:</h3>
-        <h5 className="text-[18px] font-[600]">${subTotalPrice}</h5>
+    <div className="w-full bg-white border border-sand shadow-card rounded-2xl p-5 800px:p-6">
+      <h2 className="font-display text-[18px] font-semibold text-espresso mb-4">
+        Order summary
+      </h2>
+      <div className="flex justify-between py-1.5 text-[14px]">
+        <span className="text-clay">Subtotal</span>
+        <span className="font-mono text-espresso">Rs {subTotalPrice}</span>
       </div>
-      <br />
-      <div className="flex justify-between">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">shipping:</h3>
-        <h5 className="text-[18px] font-[600]">${shipping.toFixed(2)}</h5>
+      <div className="flex justify-between py-1.5 text-[14px]">
+        <span className="text-clay">Shipping</span>
+        <span className="font-mono text-espresso">
+          {shipping === 0 ? "Free" : `Rs ${shipping}`}
+        </span>
       </div>
-      <br />
-      <div className="flex justify-between border-b pb-3">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">Discount:</h3>
-        <h5 className="text-[18px] font-[600]">
-          - {discountPercentage ? "$" + discountPercentage.toString() : null}
-        </h5>
+      <div className="flex justify-between py-1.5 text-[14px] border-b border-sand pb-3">
+        <span className="text-clay">Discount</span>
+        <span className="font-mono text-espresso">
+          {discountPercentage ? "− Rs " + discountPercentage.toString() : "—"}
+        </span>
       </div>
-      <h5 className="text-[18px] font-[600] text-end pt-3">${totalPrice}</h5>
-      <br />
-      <form onSubmit={handleSubmit}>
+      <div className="flex justify-between items-baseline pt-3 mb-4">
+        <span className="font-medium text-espresso">Total</span>
+        <span className="font-mono font-semibold text-[20px] text-espresso">
+          Rs {totalPrice}
+        </span>
+      </div>
+
+      <form onSubmit={handleSubmit} className="flex gap-2">
         <input
           type="text"
-          className={`${styles.input} h-[40px] pl-2`}
-          placeholder="Coupoun code"
+          className="flex-1 min-w-0 h-[44px] px-3 bg-bone border border-sand focus:border-marigold rounded-lg transition-colors"
+          placeholder="Coupon code"
           value={couponCode}
           onChange={(e) => setCouponCode(e.target.value)}
           required
         />
         <input
-          className={`w-full h-[40px] border border-espresso text-center text-espresso hover:bg-espresso hover:text-bone transition-colors rounded-[6px] mt-8 cursor-pointer`}
+          className="px-4 h-[44px] rounded-lg border border-espresso text-espresso hover:bg-espresso hover:text-bone transition-colors cursor-pointer text-[14px] shrink-0"
           required
-          value="Apply code"
+          value="Apply"
           type="submit"
         />
       </form>
