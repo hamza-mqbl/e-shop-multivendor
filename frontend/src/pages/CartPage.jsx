@@ -45,9 +45,9 @@ const CartPage = () => {
   };
 
   return (
-    <div className="bg-bone min-h-screen flex flex-col">
+    <div className="bg-bone min-h-screen">
       <Header />
-      <div className={`${styles.section} py-8 800px:py-12 flex-1 w-full`}>
+      <div className={`${styles.section} py-8 800px:py-12`}>
         <h1 className="font-display text-[28px] font-semibold text-espresso mb-6">
           Your cart
         </h1>
