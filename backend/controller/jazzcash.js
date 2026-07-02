@@ -5,6 +5,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
 const Order = require("../model/order");
 const Product = require("../model/product");
+const sendOrderEmails = require("../utils/orderEmails");
 
 // Keep these in sync with the storefront cart/checkout rules.
 const FREE_SHIPPING_OVER = 5000;
@@ -156,6 +157,9 @@ router.post(
           },
         }
       );
+      // notify customer + sellers now that payment is confirmed
+      const paidOrders = await Order.find({ "paymentInfo.id": txnRefNo });
+      sendOrderEmails(paidOrders, paidOrders[0]?.user).catch(() => {});
       return res.redirect(`${cfg.clientUrl}/order/success`);
     }
 

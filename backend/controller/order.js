@@ -6,6 +6,7 @@ const { isAuthenticated, isSeller } = require("../middleware/auth");
 const Order = require("../model/order");
 const Product = require("../model/product");
 const Shop = require("../model/shop");
+const sendOrderEmails = require("../utils/orderEmails");
 
 router.post(
   "/create-order",
@@ -39,7 +40,9 @@ router.post(
         success: true,
         orders,
       });
-      console.log("🚀 ~ res.status ~ orders:", orders);
+
+      // notify customer + sellers (fire-and-forget; never blocks the response)
+      sendOrderEmails(orders, user).catch(() => {});
     } catch (error) {
       return next(new ErrorHandler(error.message, 400));
     }
