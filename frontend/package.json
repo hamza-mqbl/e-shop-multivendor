@@ -5,10 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.12.4",
     "@material-ui/data-grid": "^4.0.0-alpha.37",
-    "@paypal/react-paypal-js": "^8.5.0",
     "@reduxjs/toolkit": "^2.0.1",
-    "@stripe/react-stripe-js": "^2.7.1",
-    "@stripe/stripe-js": "^4.0.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",

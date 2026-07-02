@@ -1,164 +1,88 @@
 import React, { useEffect, useState } from "react";
-import styles from "../../styles/styles";
-import {
-  CardNumberElement,
-  CardCvcElement,
-  CardExpiryElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { RxCross1 } from "react-icons/rx";
 
 const Payment = () => {
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const stripe = useStripe();
-  const elements = useElements();
-  const [open, setOpen] = useState(false);
-  const [orderData, setOrderData] = useState([]);
+  const [orderData, setOrderData] = useState(null);
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("latestOrder"));
-    setOrderData(data);
+    setOrderData(JSON.parse(localStorage.getItem("latestOrder")));
   }, []);
 
-  const createOrder = (data, actions) => {
-    return actions.order
-      .create({
-        purchase_units: [
-          {
-            description: "Qadam order",
-            amount: {
-              currency_code: "USD",
-              value: orderData?.totalPrice,
-            },
-          },
-        ],
-      })
-      .then((orderId) => {
-        return orderId;
-      });
-  };
+  // surface a failed/invalid JazzCash return
+  useEffect(() => {
+    const status = new URLSearchParams(window.location.search).get("status");
+    if (status === "failed")
+      toast.error("Payment wasn't completed. Please try again.");
+    else if (status === "invalid")
+      toast.error("We couldn't verify that payment. Please try again.");
+  }, []);
 
-  const onApprove = async (data, actions) => {
-    return actions.order.capture().then(function (details) {
-      const { payer } = details;
-      let paymentInfo = payer;
-      if (paymentInfo !== undefined) {
-        paypalPayementHandler(paymentInfo);
-      }
-    });
-  };
-
-  const paypalPayementHandler = async (paymentInfo) => {
-    const config = {
-      headers: { "Content-Type": "application/json" },
-    };
-    order.paymentInfo = {
-      id: paymentInfo.payer_id,
-      status: "succeeded",
-      type: "Paypal",
-    };
-    await axios
-      .post(`${server}/order/create-order`, order, config)
-      .then((res) => {
-        setOpen(false);
-        navigate("/order/success");
-        toast.success("Order placed successfully!");
-        localStorage.setItem("cartItems", JSON.stringify([]));
-        localStorage.setItem("latestOrder", JSON.stringify([]));
-        window.location.reload();
-      });
-  };
-
-  const paymentData = {
-    amount: Math.round(orderData?.totalPrice * 100),
-  };
-  const order = {
-    cart: orderData?.cart,
-    shippingAddress: orderData?.shippingAddress,
-    user: user && user,
-    totalPrice: orderData?.totalPrice,
-  };
-
-  const paymentHandler = async (e) => {
-    e.preventDefault();
+  // ── JazzCash: ask the server for a signed field set, then POST to the
+  //    hosted payment page (we never handle card/wallet details ourselves).
+  const jazzcashHandler = async () => {
     try {
-      const config = {
-        headers: { "Content-Type": "application/json" },
-      };
       const { data } = await axios.post(
-        `${server}/payment/process`,
-        paymentData,
-        config
-      );
-      const client_secret = data.client_secret;
-      if (!stripe || !elements) return;
-      const result = await stripe.confirmCardPayment(client_secret, {
-        payment_method: {
-          card: elements.getElement(CardNumberElement),
+        `${server}/jazzcash/initiate`,
+        {
+          cart: orderData?.cart,
+          shippingAddress: orderData?.shippingAddress,
+          user,
         },
+        { withCredentials: true }
+      );
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = data.url;
+      Object.entries(data.params).forEach(([name, value]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = name;
+        input.value = value ?? "";
+        form.appendChild(input);
       });
-      if (result.error) {
-        toast.error(result.error.message);
-      } else {
-        if (result.paymentIntent.status === "succeeded") {
-          order.paymentInfo = {
-            id: result.paymentIntent.id,
-            status: result.paymentIntent.status,
-            type: "Credit Card",
-          };
-          await axios
-            .post(`${server}/order/create-order`, order, config)
-            .then((res) => {
-              setOpen(false);
-              navigate("/order/success");
-              toast.success("Order placed successfully!");
-              localStorage.setItem("cartItems", JSON.stringify([]));
-              localStorage.setItem("latestOrder", JSON.stringify([]));
-              window.location.reload();
-            });
-        }
-      }
-    } catch (error) {
-      toast.error(error);
+      document.body.appendChild(form);
+      form.submit();
+    } catch (err) {
+      toast.error(
+        err?.response?.data?.message || "Couldn't start the JazzCash payment"
+      );
     }
   };
 
+  // ── Cash on delivery: create the order straight away.
   const cashOnDeliveryHandler = async (e) => {
     e.preventDefault();
-    order.paymentInfo = { type: "Cash on Delivery" };
-    const config = {
-      headers: { "Content-Type": "application/json" },
+    const order = {
+      cart: orderData?.cart,
+      shippingAddress: orderData?.shippingAddress,
+      user,
+      totalPrice: orderData?.totalPrice,
+      paymentInfo: { type: "Cash on Delivery" },
     };
-    await axios
-      .post(`${server}/order/create-order`, order, config)
-      .then((res) => {
-        setOpen(false);
-        navigate("/order/success");
-        toast.success("Order placed successfully!");
-        localStorage.setItem("cartItems", JSON.stringify([]));
-        localStorage.setItem("latestOrder", JSON.stringify([]));
-        window.location.reload();
+    try {
+      await axios.post(`${server}/order/create-order`, order, {
+        headers: { "Content-Type": "application/json" },
       });
+      navigate("/order/success");
+      toast.success("Order placed successfully!");
+      localStorage.setItem("cartItems", JSON.stringify([]));
+      localStorage.setItem("latestOrder", JSON.stringify([]));
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Could not place the order");
+    }
   };
 
   return (
     <div className="w-full block 800px:flex gap-6 items-start">
       <div className="flex-1 min-w-0">
         <PaymentInfo
-          user={user}
-          open={open}
-          setOpen={setOpen}
-          onApprove={onApprove}
-          createOrder={createOrder}
-          paymentHandler={paymentHandler}
+          jazzcashHandler={jazzcashHandler}
           cashOnDeliveryHandler={cashOnDeliveryHandler}
         />
       </div>
@@ -179,27 +103,15 @@ const Radio = ({ selected }) => (
   </span>
 );
 
-const cardStyle = {
-  base: { fontSize: "16px", lineHeight: 1.5, color: "#241A14" },
-  empty: { color: "#241A14", "::placeholder": { color: "#8C7A6B" } },
-};
 const payBtn =
   "w-full h-[48px] bg-marigold hover:bg-marigold-dark text-espresso font-display font-medium rounded-xl cursor-pointer transition-colors";
 
-const PaymentInfo = ({
-  user,
-  open,
-  setOpen,
-  onApprove,
-  createOrder,
-  paymentHandler,
-  cashOnDeliveryHandler,
-}) => {
+const PaymentInfo = ({ jazzcashHandler, cashOnDeliveryHandler }) => {
   const [select, setSelect] = useState(1);
 
   return (
     <div className="w-full bg-white border border-sand shadow-card rounded-2xl p-5 800px:p-6">
-      {/* card */}
+      {/* JazzCash */}
       <div className="border-b border-sand">
         <button
           type="button"
@@ -208,65 +120,24 @@ const PaymentInfo = ({
         >
           <Radio selected={select === 1} />
           <h4 className="text-[16px] font-display font-medium text-espresso">
-            Debit / credit card
+            JazzCash — card or mobile wallet
           </h4>
         </button>
-
         {select === 1 ? (
           <div className="w-full pb-5">
-            <form className="w-full" onSubmit={paymentHandler}>
-              <div className="w-full flex gap-4 pb-3">
-                <div className="w-[50%]">
-                  <label className="block pb-1 text-[14px] font-medium text-espresso">
-                    Name on card
-                  </label>
-                  <input
-                    required
-                    placeholder={user && user.name}
-                    className={styles.input}
-                    value={user && user.name}
-                    readOnly
-                  />
-                </div>
-                <div className="w-[50%]">
-                  <label className="block pb-1 text-[14px] font-medium text-espresso">
-                    Expiry date
-                  </label>
-                  <CardExpiryElement
-                    className={`${styles.input} !py-3`}
-                    options={{ style: cardStyle }}
-                  />
-                </div>
-              </div>
-
-              <div className="w-full flex gap-4 pb-4">
-                <div className="w-[50%]">
-                  <label className="block pb-1 text-[14px] font-medium text-espresso">
-                    Card number
-                  </label>
-                  <CardNumberElement
-                    className={`${styles.input} !py-3`}
-                    options={{ style: cardStyle }}
-                  />
-                </div>
-                <div className="w-[50%]">
-                  <label className="block pb-1 text-[14px] font-medium text-espresso">
-                    CVV
-                  </label>
-                  <CardCvcElement
-                    className={`${styles.input} !py-3`}
-                    options={{ style: cardStyle }}
-                  />
-                </div>
-              </div>
-              <input type="submit" value="Pay now" className={payBtn} />
-            </form>
+            <p className="text-[14px] text-clay mb-3">
+              You'll be taken to JazzCash's secure page to pay with your card,
+              JazzCash wallet or bank account, then returned here.
+            </p>
+            <button type="button" className={payBtn} onClick={jazzcashHandler}>
+              Pay with JazzCash
+            </button>
           </div>
         ) : null}
       </div>
 
-      {/* paypal */}
-      <div className="border-b border-sand">
+      {/* Cash on delivery */}
+      <div>
         <button
           type="button"
           className="flex items-center gap-3 w-full py-4"
@@ -274,65 +145,15 @@ const PaymentInfo = ({
         >
           <Radio selected={select === 2} />
           <h4 className="text-[16px] font-display font-medium text-espresso">
-            PayPal
-          </h4>
-        </button>
-
-        {select === 2 ? (
-          <div className="w-full pb-5">
-            <button
-              type="button"
-              className={payBtn}
-              onClick={() => setOpen(true)}
-            >
-              Pay now
-            </button>
-            {open && (
-              <div className="w-full fixed top-0 left-0 bg-espresso/40 backdrop-blur-sm h-screen flex items-center justify-center z-[99999]">
-                <div className="w-full 800px:w-[40%] h-screen 800px:h-[80vh] bg-white rounded-2xl shadow-cardHover flex flex-col justify-center p-8 relative overflow-y-scroll">
-                  <RxCross1
-                    size={26}
-                    className="cursor-pointer absolute top-4 right-4 text-clay"
-                    onClick={() => setOpen(false)}
-                  />
-                  <PayPalScriptProvider
-                    options={{
-                      "client-id":
-                        "ASEwIwBSNLyGNzOquq0UQW5IljQ7JkYZmjcq1KrOCLPaol_4tZsYej_Vm9_lMwoHi8USY8-2avFTcHlh",
-                    }}
-                  >
-                    <PayPalButtons
-                      style={{ layout: "vertical" }}
-                      onApprove={onApprove}
-                      createOrder={createOrder}
-                    />
-                  </PayPalScriptProvider>
-                </div>
-              </div>
-            )}
-          </div>
-        ) : null}
-      </div>
-
-      {/* cash on delivery */}
-      <div>
-        <button
-          type="button"
-          className="flex items-center gap-3 w-full py-4"
-          onClick={() => setSelect(3)}
-        >
-          <Radio selected={select === 3} />
-          <h4 className="text-[16px] font-display font-medium text-espresso">
             Cash on delivery
           </h4>
         </button>
-
-        {select === 3 ? (
+        {select === 2 ? (
           <div className="w-full pb-4">
             <p className="text-[14px] text-clay mb-3">
               Pay in cash when your order arrives at your door.
             </p>
-            <form className="w-full" onSubmit={cashOnDeliveryHandler}>
+            <form onSubmit={cashOnDeliveryHandler}>
               <input type="submit" value="Confirm order" className={payBtn} />
             </form>
           </div>
@@ -375,4 +196,5 @@ const CartData = ({ orderData }) => {
     </div>
   );
 };
+
 export default Payment;

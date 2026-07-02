@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Footer from "../components/layout/Footer";
 import Header from "../components/layout/Header";
 import Lottie from "react-lottie";
 import animationData from "../Assests/animations/107043-success.json";
+import { clearCart } from "../redux/actions/cart";
 
 const OrderSuccessPage = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    // empty the cart once the order is confirmed (covers COD + JazzCash return)
+    dispatch(clearCart());
+    localStorage.setItem("latestOrder", JSON.stringify([]));
+  }, [dispatch]);
+
   const defaultOptions = {
     loop: false,
     autoplay: true,
