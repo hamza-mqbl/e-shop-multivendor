@@ -38,6 +38,14 @@ app.get("*", (req, res) => {
 // create server
 const server = app.listen(process.env.PORT, () => {
   console.log(`Server is running on http://localhost:${process.env.PORT}`);
+  const ok = (v) => (v ? "✓" : "✗ missing");
+  console.log(
+    `Config → JazzCash: ${ok(
+      process.env.JAZZCASH_MERCHANT_ID && process.env.JAZZCASH_INTEGRITY_SALT
+    )} | Email(SMTP): ${ok(
+      process.env.SMPT_MAIL && process.env.SMPT_PASSWORD
+    )} | DB: ${ok(process.env.MONGO_URL)}`
+  );
 });
 
 // unhandled promise rejection
