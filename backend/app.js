@@ -17,10 +17,15 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
+      // Allowed browser origins get credentialed CORS headers.
+      // Anything else (e.g. a payment gateway POSTing the customer back to our
+      // callback) is still processed — we just don't add CORS headers. This
+      // keeps XHR from unknown origins unreadable while letting cross-site
+      // navigations/redirects (JazzCash return) reach their route handler.
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        callback(null, false);
       }
     },
     credentials: true,
