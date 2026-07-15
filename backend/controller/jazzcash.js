@@ -7,15 +7,46 @@ const Order = require("../model/order");
 const Product = require("../model/product");
 const sendOrderEmails = require("../utils/orderEmails");
 
+
+
+
+// Sandbox diagnostics: log EVERY request that reaches the JazzCash router.
+// If this line never prints when JazzCash "returns" the customer, the request
+// is not hitting our server at all (wrong ReturnURL / not publicly reachable
+// from JazzCash / stuck on JazzCash's side). Remove/gate before production.
+router.use((req, _res, next) => {
+  console.log("──────── JazzCash request ────────");
+  console.log("time    :", new Date().toISOString());
+  console.log("method  :", req.method);
+  console.log("url     :", req.originalUrl);
+  console.log("ip      :", req.ip, "| xff:", req.headers["x-forwarded-for"]);
+  console.log("type    :", req.headers["content-type"]);
+  console.log("query   :", JSON.stringify(req.query));
+  console.log("body    :", JSON.stringify(req.body));
+  console.log("──────────────────────────────────");
+  next();
+});
+
 // Keep these in sync with the storefront cart/checkout rules.
 const FREE_SHIPPING_OVER = 5000;
 const FLAT_SHIPPING = 200;
 
 const pad = (n) => String(n).padStart(2, "0");
-const fmtDate = (d) =>
-  `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}${pad(
-    d.getHours()
-  )}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+// JazzCash validates pp_TxnDateTime / pp_TxnExpiryDateTime against its OWN
+// clock, which is PKT (UTC+5, no DST). Build the timestamp in PKT explicitly
+// so it's correct regardless of server timezone. Locally your Mac is PKT so an
+// unqualified local time happens to work, but on Vercel/serverless the host is
+// UTC — there the time would look ~5h in the past and JazzCash would treat the
+// transaction as expired. Shifting the epoch by +5h and reading UTC fields
+// yields PKT wall-clock everywhere.
+const fmtDate = (d) => {
+  const pkt = new Date(d.getTime() + 5 * 60 * 60 * 1000);
+  return `${pkt.getUTCFullYear()}${pad(pkt.getUTCMonth() + 1)}${pad(
+    pkt.getUTCDate()
+  )}${pad(pkt.getUTCHours())}${pad(pkt.getUTCMinutes())}${pad(
+    pkt.getUTCSeconds()
+  )}`;
+};
 
 /**
  * JazzCash secure hash (HTTP POST / Page Redirect).
@@ -25,7 +56,7 @@ const fmtDate = (d) =>
  *   3. prepend the Integrity Salt, then HMAC-SHA256 keyed with that same salt
  *   4. hex digest
  */
-const computeSecureHash = (fields, salt) => {
+const buildHashString = (fields, salt) => {
   const keys = Object.keys(fields)
     .filter(
       (k) =>
@@ -38,6 +69,11 @@ const computeSecureHash = (fields, salt) => {
     .sort();
   let toHash = salt;
   for (const k of keys) toHash += "&" + fields[k];
+  return { keys, toHash };
+};
+
+const computeSecureHash = (fields, salt) => {
+  const { toHash } = buildHashString(fields, salt);
   return crypto.createHmac("sha256", salt).update(toHash).digest("hex");
 };
 
@@ -101,11 +137,21 @@ router.post(
       });
     }
 
+    // Full hosted page-redirection field set. The empty ones (pp_TxnType,
+    // pp_SubMerchantID, pp_BankID, pp_ProductID) MUST still be posted — the
+    // hosted merchantform expects them present so the customer can pick a
+    // payment method on JazzCash's page. They're empty, so both our hash and
+    // JazzCash's hash skip them (consistent), but omitting the fields entirely
+    // triggers "insufficient merchant information".
     const fields = {
       pp_Version: "1.1",
+      pp_TxnType: "",
       pp_Language: "EN",
       pp_MerchantID: cfg.merchantId,
+      pp_SubMerchantID: "",
       pp_Password: cfg.password,
+      pp_BankID: "",
+      pp_ProductID: "",
       pp_TxnRefNo: txnRefNo,
       pp_Amount: amountPaisa,
       pp_TxnCurrency: "PKR",
@@ -117,6 +163,12 @@ router.post(
       ppmpf_1: String((user && user._id) || ""),
     };
     fields.pp_SecureHash = computeSecureHash(fields, cfg.salt);
+
+    // Log the exact signed field set we hand to the browser (sandbox only).
+    if (process.env.NODE_ENV !== "PRODUCTION") {
+      console.log("JazzCash /initiate → posting to:", cfg.postUrl);
+      console.log("JazzCash /initiate fields:", JSON.stringify({ ...fields, pp_Password: "***" }, null, 2));
+    }
 
     res.status(200).json({ success: true, url: cfg.postUrl, params: fields });
   })
@@ -134,6 +186,18 @@ router.post(
     const txnRefNo = data.pp_TxnRefNo;
     const received = data.pp_SecureHash || "";
     const expected = computeSecureHash(data, cfg.salt);
+
+    // Sandbox diagnostics: see exactly what we signed vs. what JazzCash sent.
+    // Remove (or gate) before production — this prints the salt-derived string.
+    if (process.env.NODE_ENV !== "PRODUCTION") {
+      const { keys, toHash } = buildHashString(data, cfg.salt);
+      console.log("JazzCash /callback body:", JSON.stringify(data, null, 2));
+      console.log("JazzCash /callback signed keys:", keys);
+      console.log("JazzCash /callback string-to-sign:", toHash);
+      console.log("JazzCash /callback salt present:", Boolean(cfg.salt), "len:", (cfg.salt || "").length);
+      console.log("JazzCash /callback hash received:", received);
+      console.log("JazzCash /callback hash expected:", expected);
+    }
 
     // Integrity check first — reject any tampered response.
     if (!received || received.toLowerCase() !== expected.toLowerCase()) {
@@ -171,6 +235,64 @@ router.post(
     return res.redirect(
       `${cfg.clientUrl}/payment?status=failed&code=${data.pp_ResponseCode || ""}`
     );
+  })
+);
+
+// ── 3) IPN (Instant Payment Notification) ─────────────────────────────────
+// Server-to-server "safety net". JazzCash POSTs the payment result here
+// directly, independent of the customer's browser — so the order still gets
+// resolved even if the customer closes the tab before the /callback redirect.
+//
+// Two rules that matter:
+//   • ALWAYS return HTTP 200 (even on a bad hash), or JazzCash keeps retrying.
+//   • Be idempotent — this can race/overlap with /callback for the same txn,
+//     so only act on orders still "Pending" and only email on the first win.
+router.post(
+  "/ipn",
+  catchAsyncErrors(async (req, res) => {
+    const cfg = config();
+    const data = req.body || {};
+
+    // Sandbox visibility: dump exactly what JazzCash POSTs here so you can see
+    // the real field set/values while testing. Safe to remove for production.
+    console.log("JazzCash IPN payload:", JSON.stringify(data, null, 2));
+
+    const txnRefNo = data.pp_TxnRefNo;
+    const received = data.pp_SecureHash || "";
+    const expected = computeSecureHash(data, cfg.salt);
+
+    // Verify integrity, but never make JazzCash retry: log + 200 on mismatch.
+    if (!txnRefNo || !received || received.toLowerCase() !== expected.toLowerCase()) {
+      console.warn("JazzCash IPN: invalid or missing secure hash", { txnRefNo });
+      return res.status(200).send("OK");
+    }
+
+    if (data.pp_ResponseCode === "000") {
+      // Claim only the still-Pending orders for this txn. If /callback already
+      // approved them, matchedCount is 0 and we skip the emails — no dupes.
+      const result = await Order.updateMany(
+        { "paymentInfo.id": txnRefNo, "paymentInfo.status": "Pending" },
+        {
+          $set: {
+            status: "Processing",
+            "paymentInfo.status": "Approved",
+            paidAt: new Date(),
+          },
+        }
+      );
+      if (result.modifiedCount > 0) {
+        const paidOrders = await Order.find({ "paymentInfo.id": txnRefNo });
+        sendOrderEmails(paidOrders, paidOrders[0]?.user).catch(() => {});
+      }
+    } else {
+      // declined / cancelled / expired — drop any pending order(s) for this txn
+      await Order.deleteMany({
+        "paymentInfo.id": txnRefNo,
+        "paymentInfo.status": "Pending",
+      });
+    }
+
+    return res.status(200).send("OK");
   })
 );
 

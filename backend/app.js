@@ -12,6 +12,7 @@ const allowedOrigins = [
   "http://localhost:3000", // Local development
   "http://localhost:8000", // Local development
   "https://e-shop-multivendor.vercel.app",
+  "https://cbf5-182-189-70-124.ngrok-free.app/",
 ];
 
 app.use(
@@ -22,11 +23,7 @@ app.use(
       // callback) is still processed — we just don't add CORS headers. This
       // keeps XHR from unknown origins unreadable while letting cross-site
       // navigations/redirects (JazzCash return) reach their route handler.
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(null, false);
-      }
+    callback(null,true)
     },
     credentials: true,
   })
