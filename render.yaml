@@ -1,0 +1,17 @@
+# Render Blueprint — hosts the Socket.IO chat server (Qadam).
+# The Express backend runs on Vercel; only this persistent WebSocket process
+# lives here. In Render: New + → Blueprint → connect this repo → Apply.
+services:
+  - type: web
+    name: qadam-socket
+    runtime: docker
+    repo: https://github.com/hamza-mqbl/qadam-shoe-store
+    dockerfilePath: ./socket/Dockerfile
+    dockerContext: ./socket
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      # Lock CORS to the deployed frontend origin (change if the URL changes).
+      - key: SOCKET_CORS_ORIGIN
+        value: https://qadam-shoe-store-fe.vercel.app
