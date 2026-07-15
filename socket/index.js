@@ -4,10 +4,20 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server);
 
 require("dotenv").config({
   path: "./.env",
+});
+
+// Socket.IO needs its OWN CORS config — app.use(cors()) only covers plain HTTP,
+// not the WebSocket/polling handshake. Without this the browser (served from
+// the Vercel frontend origin) is blocked from connecting. Set SOCKET_CORS_ORIGIN
+// to your frontend URL in production; defaults to "*" for local/dev.
+const io = socketIO(server, {
+  cors: {
+    origin: process.env.SOCKET_CORS_ORIGIN || "*",
+    methods: ["GET", "POST"],
+  },
 });
 
 app.use(cors());
@@ -106,6 +116,7 @@ io.on("connection", (socket) => {
     io.emit("getUsers", users);
   });
 });
-server.listen(process.env.PORT, () => {
-  console.log(`server is running on port ${process.env.PORT}`);
+const PORT = process.env.PORT || 4000;
+server.listen(PORT, () => {
+  console.log(`socket server is running on port ${PORT}`);
 });
