@@ -42,6 +42,19 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
   });
 }
 
+// Ensure the DB connection is live before any route runs. On serverless this
+// awaits the cached connection (reconnecting if the container was frozen), so
+// queries never buffer-timeout. Locally it resolves instantly once connected.
+const connectDatabase = require("./db/Database");
+app.use(async (req, res, next) => {
+  try {
+    await connectDatabase();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 // import routes
 const user = require("./controller/user");
 const player = require("./controller/player.js");

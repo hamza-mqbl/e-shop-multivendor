@@ -13,9 +13,9 @@ const cloudinary = require("cloudinary").v2;
 // exists locally, so load it best-effort without failing when it's absent.
 require("dotenv").config({ path: "config/.env" });
 
-// Kick off the Mongo connection at cold start. Mongoose buffers queries until
-// it's ready, so the first request just waits for the connection.
-connectDatabase();
+// Prime the Mongo connection at cold start (best-effort). The per-request
+// guard middleware in app.js awaits it properly; this just gets a head start.
+connectDatabase().catch(() => {});
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
